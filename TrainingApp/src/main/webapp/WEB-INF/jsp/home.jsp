@@ -5,10 +5,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <title>Person Funds</title>
+<script>
+	$(document).ready(function() {
+		$("button").click(function() {
+			$.get("/TrainingApp/person", function(data, code) {
+				alert("Redirecting to DataBase");
+			});
+		});
+	});
+</script>
 </head>
 <body>
-<p>This works</p>
+	<h1>Database access</h1>
+	<button>GET request for DB</button>
 </body>
 </html>

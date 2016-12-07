@@ -39,33 +39,39 @@
 
 			<tr>
 				<td colspan="2">
-				<input type="submit" name="action" value="Add" />
-				<input type="submit" name="action" value="Edit" /> 
-				<input type="submit" name="action" value="Delete" /> 
-				<input type="submit" name="action" value="Search" />
+					<input type="submit" name="action" value="Add" />
+					<input type="submit" name="action" value="Edit" /> 
+					<input type="submit" name="action" value="Delete" /> 
+					<input type="submit" name="action" value="Search" />
 				</td>
 			</tr>
 		</table>
 	</form:form>
-			
-			<br>
-			<table border="1">
-				<th>ID</th>
-				<th>ISIN</th>
-				<th>Name</th>
-				<th>Performance Yr1</th>
-				<th>Performance Yr2</th>
-				<th>Performance Yr3</th>
-				<c:forEach items="${personList}" var="person">
-					<tr>
-						<td>${person.pk}</td>
-						<td>${person.isin}</td>
-						<td>${person.name}</td>
-						<td>${person.performance_1yr}</td>
-						<td>${person.performance_2yr}</td>
-						<td>${person.performance_3yr}</td>
-					</tr>
-				</c:forEach>
-			</table>
+
+	<br>
+	<table border="1">
+		<th>ID</th>
+		<th>ISIN</th>
+		<th>Name</th>
+		<th>Performance Yr1</th>
+		<th>Performance Yr2</th>
+		<th>Performance Yr3</th>
+		<th>Total performance</th>
+		<c:forEach items="${personList}" var="person">
+			<tr>
+				<td>${person.pk}</td>
+				<td>${person.isin}</td>
+				<td>${person.name}</td>
+				<td>${person.performance_1yr}</td>
+				<td>${person.performance_2yr}</td>
+				<td>${person.performance_3yr}</td>
+				<td><p id="demo">Hidden</p></td>
+				<td><button type="button" onclick="myFunction()">Calculate total</button>
+					<script src="/TrainingApp/javascript/calculate.js"></script></td>
+
+			</tr>
+		</c:forEach>
+	</table>
+
 </body>
 </html>
