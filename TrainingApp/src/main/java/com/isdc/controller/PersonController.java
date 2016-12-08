@@ -27,28 +27,42 @@ public class PersonController {
 		return "person";
 	}
 
-	@RequestMapping(value = "/person.do", method = RequestMethod.POST)
-	public String doActions(@ModelAttribute Person person, BindingResult result, @RequestParam String action, Map<String, Object> map){
+	
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String addValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map){
 		Person personResult = new Person();
-		switch(action.toLowerCase()){
-		case "add":
-			personService.add(person);
-			personResult = person;
-			break;
-		case "edit":
-			personService.edit(person);
-			personResult = person;
-			break;
-		case "delete":
-			personService.delete(person.getPk());
-			personResult = new Person();
-			break;
-		case "search":
-			Person searchedPerson = personService.getPerson(person.getPk());
-			personResult = searchedPerson!=null? searchedPerson : new Person();
-			break;
-		
-		}
+		personService.add(person);
+		personResult = person;
+		map.put("person", personResult);
+		map.put("personList", personService.getAllPerson());
+		return "person";
+	}
+	
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
+	public String editValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map){
+		Person personResult = new Person();
+		personService.edit(person);
+		personResult = person;
+		map.put("person", personResult);
+		map.put("personList", personService.getAllPerson());
+		return "person";
+	}
+	
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public String searchValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map){
+		Person personResult = new Person();
+		Person searchedPerson = personService.getPerson(person.getPk());
+		personResult = searchedPerson!=null? searchedPerson : new Person();
+		map.put("person", personResult);
+		map.put("personList", personService.getAllPerson());
+		return "person";
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public String deleteValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map){
+		Person personResult = new Person();
+		personService.delete(person.getPk());
+		personResult = new Person();
 		map.put("person", personResult);
 		map.put("personList", personService.getAllPerson());
 		return "person";

@@ -6,47 +6,53 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/TrainingApp/javascript/actions.js"></script>
+<script src="/TrainingApp/javascript/calculate.js"></script>
+
 <title>Person Funds</title>
 </head>
 <body>
 	<h1>Person Data</h1>
-	<form:form action="person.do" method="POST" commandName="person">
-		<table>
-			<tr>
-				<td>Person ID</td>
-				<td><form:input path="pk" /></td>
-			</tr>
-			<tr>
-				<td>Person ISIN</td>
-				<td><form:input path="isin" /></td>
-			</tr>
-			<tr>
-				<td>Name</td>
-				<td><form:input path="name" /></td>
-			</tr>
-			<tr>
-				<td>Performance Yr1</td>
-				<td><form:input path="performance_1yr" /></td>
-			</tr>
-			<tr>
-				<td>Performance Yr2</td>
-				<td><form:input path="performance_2yr" /></td>
-			</tr>
-			<tr>
-				<td>Performance Yr3</td>
-				<td><form:input path="performance_3yr" /></td>
-			</tr>
+	<form id="form">
+	<table>
+		<tr>
+			<td>Person ID</td>
+			<td><input type="text" name="pk" /></td>
+		</tr>
+		<tr>
+			<td>Person ISIN</td>
+			<td><input type="text" name="isin" value="" /></td>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><input type="text" name="name" value="" /></td>
+		</tr>
+		<tr>
+			<td>Performance Yr1</td>
+			<td><input type="text" name="performance_1yr" value="" /></td>
+		</tr>
+		<tr>
+			<td>Performance Yr2</td>
+			<td><input type="text" name="performance_2yr" value="" /></td>
+		</tr>
+		<tr>
+			<td>Performance Yr3</td>
+			<td><input type="text" name="performance_3yr" value="" /></td>
+		</tr>
 
-			<tr>
-				<td colspan="2">
-					<input type="submit" name="action" value="Add" />
-					<input type="submit" name="action" value="Edit" /> 
-					<input type="submit" name="action" value="Delete" /> 
-					<input type="submit" name="action" value="Search" />
-				</td>
-			</tr>
-		</table>
-	</form:form>
+		<tr>
+			<td colspan="2">
+				<button id="btn_add" type="submit" name="add" >Add</button>
+				<input type="submit" onclick="edit()" name="action" value="Edit" />
+				<input type="submit" onclick="delete()" name="action" value="Delete" />
+				<input type="submit" onclick="search()" name="action" value="Search" />
+			</td>
+		</tr>
+	</table>
+</form>
 
 	<br>
 	<table border="1">
@@ -66,8 +72,9 @@
 				<td>${person.performance_2yr}</td>
 				<td>${person.performance_3yr}</td>
 				<td><p id="demo">Hidden</p></td>
-				<td><button type="button" onclick="myFunction()">Calculate total</button>
-					<script src="/TrainingApp/javascript/calculate.js"></script></td>
+				<td><button type="button" onclick="myFunction()">Calculate
+						total</button></td>
+
 
 			</tr>
 		</c:forEach>
