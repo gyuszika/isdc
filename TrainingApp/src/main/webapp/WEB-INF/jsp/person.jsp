@@ -13,6 +13,7 @@
 <script src="/TrainingApp/javascript/edit.js"></script>
 <script src="/TrainingApp/javascript/search.js"></script>
 <script src="/TrainingApp/javascript/delete.js"></script>
+<script src="/TrainingApp/javascript/getContent.js"></script>
 <script src="/TrainingApp/javascript/calculate.js"></script>
 
 <title>Person Funds</title>
@@ -23,7 +24,7 @@
 	<table>
 		<tr>
 			<td>Person ID</td>
-			<td><input type="text" name="pk" /></td>
+			<td><input id="id" type="text" name="pk" /></td>
 		</tr>
 		<tr>
 			<td>Person ISIN</td>
@@ -51,13 +52,28 @@
 				<button id="btn_add" type="submit" name="add" >Add</button>
 				<button id="btn_edit" type="submit" name="edit" >Edit</button>
 				<button id="btn_search" type="button" name="search" >Search</button>
-				<button id="btn_delete" type="submit" name="delete" >Delete</button>
+				<button id="btn_delete" type="button" name="delete" >Delete</button>
 			</td>
 		</tr>
 	</table>
 </form>
 
-	<br>
+<h2>Table Contents</h2>
+<button id="btn_getPerson" type="button" name="getPerson" >Get Person</button>
+
+
+<table>
+<tbody>
+<p id="isin"></p>
+<p id="name"></p>
+<p id="performance1"></p>
+<p id="performance2"></p>
+<p id="performance3"></p>
+</tbody>
+</table>
+
+
+	<%-- <br>
 	<table border="1">
 		<th>ID</th>
 		<th>ISIN</th>
@@ -81,7 +97,7 @@
 
 			</tr>
 		</c:forEach>
-	</table>
+	</table> --%>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
-com\isdc\dao\impl\PersonDaoImpl.class
 com\isdc\controller\PersonController.class
 com\isdc\model\Person.class
-com\isdc\service\PersonService.class
 com\isdc\dao\PersonDao.class
 com\isdc\service\impl\PersonServiceImpl.class
+com\isdc\dao\impl\PersonDaoImpl.class
+com\isdc\service\PersonService.class
+com\isdc\model\JsonObject.class

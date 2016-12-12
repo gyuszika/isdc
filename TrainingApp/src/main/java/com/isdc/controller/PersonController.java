@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.isdc.model.JsonObject;
 import com.isdc.model.Person;
 import com.isdc.service.PersonService;
 
@@ -71,6 +73,21 @@ public class PersonController {
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String getForm(){
 		return "home";
+	}
+	
+	@RequestMapping(value = "/getPerson", method = RequestMethod.GET)
+	@ResponseBody
+	public JsonObject getPerson(@RequestParam(name="id") int id){
+		JsonObject jsonObj = new JsonObject();
+		Person searchedPerson = personService.getPerson(id);
+		
+		jsonObj.setIsin(searchedPerson.getIsin());
+		jsonObj.setName(searchedPerson.getName());
+		jsonObj.setPerformance_1yr(searchedPerson.getPerformance_1yr());
+		jsonObj.setPerformance_2yr(searchedPerson.getPerformance_2yr());
+		jsonObj.setPerformance_3yr(searchedPerson.getPerformance_3yr());
+
+		return jsonObj;
 	}
 	
 	

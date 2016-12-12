@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+
 @Entity
 @Table(name = "funds")
 public class Person {
@@ -16,14 +17,19 @@ public class Person {
 	@Column
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int pk;
+	
 	@Column
 	private int isin;
+	
 	@Column
 	private String name;
+
 	@Column
 	private double performance_1yr;
+	
 	@Column
 	private double performance_2yr;
+	
 	@Column
 	private double performance_3yr;
 
@@ -88,6 +94,12 @@ public class Person {
 
 	public void setPerformance_3yr(double performance_3yr) {
 		this.performance_3yr = performance_3yr;
+	}
+
+	@Override
+	public String toString() {
+		return "Person [pk=" + pk + ", isin=" + isin + ", name=" + name + ", performance_1yr=" + performance_1yr
+				+ ", performance_2yr=" + performance_2yr + ", performance_3yr=" + performance_3yr + "]";
 	}
 
 	
