@@ -32,8 +32,8 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	@Override
-	public Person getPerson(int pk) {
-		return (Person) session.getCurrentSession().get(Person.class, pk);
+	public Person getPerson(int isin) {
+		return (Person) session.getCurrentSession().get(Person.class, isin);
 	}
 
 	@Override

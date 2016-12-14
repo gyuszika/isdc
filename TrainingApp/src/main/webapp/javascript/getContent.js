@@ -1,9 +1,11 @@
 $(document).ready(function() {
+	var persons = [];
+	
 	function getPerson() {
+		
 		var ajaxRequest;
 
 		try {
-
 			ajaxRequest = new XMLHttpRequest();
 		} catch (e) {
 
@@ -20,38 +22,56 @@ $(document).ready(function() {
 			}
 		}
 	}
+	
+	$('#search_field').on('keyup', function() {
+		  var value = $(this).val();
+		  var patt = new RegExp(value, "i");
+
+		  $('#myTable').find('tr').each(function() {
+		    if (!($(this).find('td').text().search(patt) >= 0)) {
+		      $(this).not('.myHead').hide();
+		    }
+		    if (($(this).find('td').text().search(patt) >= 0)) {
+		      $(this).show();
+		    }
+
+		  });
+
+		 
+		});
 
 	$("#btn_getPerson").click(function() {
+		
+		var isin = $("#isin").val(),
+			found = false;
 
-		var id = $("#id").val();
-
-		$.ajax({
-			url : "/TrainingApp/getPerson",
-			method : "GET",
-			data : {
-				"id": id
-			},
-			success : function(data, status, xhr) {
-				console.log(data);
-				$("#status_text").html(data);
-				$('#isin').val(data.isin);
-				$('#name').val(data.name);
-				$('#Performance Year1').val(data.performance_1yr);
-				$('#Performance Year2').val(data.performance_2yr);
-				$('#Performance Year3').val(data.performance_3yr);
-				
-				$("#isin").append("<tr><td>"+data.isin+"</td></tr>");
-				$("#name").append("<tr><td>"+data.name+"</td></tr>");
-				$("#performance1").append("<tr><td>"+data.performance_1yr+"</td></tr>");
-				$("#performance2").append("<tr><td>"+data.performance_2yr+"</td></tr>");
-				$("#performance3").append("<tr><td>"+data.performance_3yr+"</td></tr>");
-
+		persons.forEach(function (person) {
+			if (person.isin === +isin) {
+				found = true;
+				alert("Person already in the list");
 			}
-
 		});
+		if (found) {
+			return;
+		}
+		
+			$.ajax({
+				url : "/TrainingApp/getPerson",
+				method : "GET",
+				data : {
+					"isin": isin
+				},
+				success : function(data, status, xhr) {
+					persons.push(data);
+					console.log(data);
+					_createDom(data);	
+				}
+
+			});
 	});
 	
 	$("#btn_getAllPerson").click(function() {
+		$("#myTbody").empty();
 
 		$.ajax({
 			url : "/TrainingApp/getAllPerson",
@@ -61,26 +81,51 @@ $(document).ready(function() {
 			
 			success : function(data,status, xhr) {
 				console.log(data);
+				persons = data;
 				
 				$.each(data, function (i,item) {
-					$("#status_text").html(data);
-					$('#isin').val(item.isin);
-					$('#name').val(item.name);
-					$('#Performance Year1').val(item.performance_1yr);
-					$('#Performance Year2').val(item.performance_2yr);
-					$('#Performance Year3').val(item.performance_3yr);
-					
-					$("#isin").append("<tr><td>"+item.isin+"</td></tr>");
-					$("#name").append("<tr><td>"+item.name+"</td></tr>");
-					$("#performance1").append("<tr><td>"+item.performance_1yr+"</td></tr>");
-					$("#performance2").append("<tr><td>"+item.performance_2yr+"</td></tr>");
-					$("#performance3").append("<tr><td>"+item.performance_3yr+"</td></tr>");
+					_createDom(item);
 				});
-
-				
 
 			}
 
 		});
 	});
+	
+	function calculate (event) {
+		console.log(isin);
+		var table = $(this).parents('tr');
+		
+		var performance_1yr = table.find('.perf1').text();
+		var performance_2yr = table.find('.perf2').text();
+		var performance_3yr = table.find('.perf3').text();
+		
+		var total = parseFloat(performance_1yr) + parseFloat(performance_2yr) +  parseFloat(performance_3yr);
+		
+		$.ajax({
+			url : "/TrainingApp/person",
+			method : "POST",
+			success : function(status, xhr) {
+				$("#status_text").html();
+				$(this).closest("td.total").find("#totalSum").append(total);
+				
+			}
+
+		});
+	}
+	
+	function _createDom(data) {
+		var newRow = $('<tr class="performance"></tr>');
+		
+		newRow.append("<td>"+data.isin+"</td>");
+		newRow.append("<td>"+data.name+"</td>");
+		newRow.append("<td class='perf1'>"+data.performance_1yr+"</td>");
+		newRow.append("<td class='perf2'>"+data.performance_2yr+"</td>");
+		newRow.append("<td class='perf3'>"+data.performance_3yr+"</td>");
+		newRow.append("<td class='total' id='totalSum'></td>");
+		newRow.append("<td><button type='button' id='"+data.isin+"'> Total </button></td></td>");
+		$("#myTbody").append(newRow)
+		
+		$("#" + data.isin).click(calculate);
+	}
 });

@@ -18,6 +18,7 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int pk;
 	
+	@NotNull
 	@Column
 	private int isin;
 	

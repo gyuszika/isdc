@@ -10,8 +10,8 @@ public interface PersonService {
 	public void edit(Person person);
 
 	public void delete(int pk);
-
-	public Person getPerson(int pk);
+	
+	public Person getPerson(int isin);
 
 	public List getAllPerson();
 }

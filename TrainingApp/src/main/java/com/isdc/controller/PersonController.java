@@ -52,15 +52,6 @@ public class PersonController {
 		return "person";
 	}
 
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public String searchValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map) {
-		Person personResult = new Person();
-		Person searchedPerson = personService.getPerson(person.getPk());
-		personResult = searchedPerson != null ? searchedPerson : new Person();
-		map.put("person", personResult);
-		map.put("personList", personService.getAllPerson());
-		return "person";
-	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String deleteValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map) {
@@ -79,9 +70,9 @@ public class PersonController {
 
 	@RequestMapping(value = "/getPerson", method = RequestMethod.GET)
 	@ResponseBody
-	public JsonObject getPerson(@RequestParam(name = "id") int id) {
+	public JsonObject getPerson(@RequestParam(name = "isin") int isin) {
 		JsonObject jsonObj = new JsonObject();
-		Person searchedPerson = personService.getPerson(id);
+		Person searchedPerson = personService.getPerson(isin);
 
 		jsonObj.setIsin(searchedPerson.getIsin());
 		jsonObj.setName(searchedPerson.getName());

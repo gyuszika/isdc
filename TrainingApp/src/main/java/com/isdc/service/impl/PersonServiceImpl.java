@@ -15,7 +15,7 @@ public class PersonServiceImpl implements PersonService {
 
 	@Autowired
 	private PersonDao personDao;
-	
+
 	@Transactional
 	public void add(Person person) {
 		personDao.add(person);
@@ -35,8 +35,8 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Transactional
-	public Person getPerson(int pk) {
-		return personDao.getPerson(pk);
+	public Person getPerson(int isin) {
+		return personDao.getPerson(isin);
 	}
 
 	@Override
