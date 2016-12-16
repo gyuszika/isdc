@@ -14,7 +14,6 @@
 <script src="/TrainingApp/javascript/search.js"></script>
 <script src="/TrainingApp/javascript/delete.js"></script>
 <script src="/TrainingApp/javascript/getContent.js"></script>
-<script src="/TrainingApp/javascript/calculate.js"></script>
 
 <title>Person Funds</title>
 </head>

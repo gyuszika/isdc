@@ -53,13 +53,9 @@ public class PersonController {
 	}
 
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String deleteValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map) {
-		Person personResult = new Person();
-		personService.delete(person.getPk());
-		personResult = new Person();
-		map.put("person", personResult);
-		map.put("personList", personService.getAllPerson());
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	public String deleteValue(@RequestParam(name = "isin") Long isin) {
+		personService.delete(isin);
 		return "person";
 	}
 
@@ -70,7 +66,7 @@ public class PersonController {
 
 	@RequestMapping(value = "/getPerson", method = RequestMethod.GET)
 	@ResponseBody
-	public JsonObject getPerson(@RequestParam(name = "isin") int isin) {
+	public JsonObject getPerson(@RequestParam(name = "isin") Long isin) {
 		JsonObject jsonObj = new JsonObject();
 		Person searchedPerson = personService.getPerson(isin);
 

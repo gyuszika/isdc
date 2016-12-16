@@ -10,9 +10,9 @@ public interface PersonDao {
 
 	public void edit(Person person);
 
-	public void delete(int pk);
+	public void delete(Long isin);
 	
-	public Person getPerson(int isin);
+	public Person getPerson(Long isin);
 
 	public List getAllPerson();
 

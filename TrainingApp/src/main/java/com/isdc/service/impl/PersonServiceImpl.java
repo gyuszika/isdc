@@ -29,13 +29,13 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Transactional
-	public void delete(int pk) {
-		personDao.delete(pk);
+	public void delete(Long isin) {
+		personDao.delete(isin);
 
 	}
 
 	@Transactional
-	public Person getPerson(int isin) {
+	public Person getPerson(Long isin) {
 		return personDao.getPerson(isin);
 	}
 

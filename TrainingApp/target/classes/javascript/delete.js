@@ -1,5 +1,4 @@
-$(document).ready(function() {
-	function deleteValue() {
+function deleteValue(x) {
 		var ajaxRequest;
 
 		try {
@@ -19,43 +18,40 @@ $(document).ready(function() {
 				}
 			}
 		}
+		
+		deleteItem(x);
 	}
 
-	$("#btn_delete").click(function(e) {
-		e.preventDefault();
-
-		var isin = $('#isin').val();
-		var name = $('#name').val();
-		var performance_1yr = $('#Performance Year1').val();
-		var performance_2yr = $('#Performance Year2').val();
-		var performance_3yr = $('#Performance Year3').val();
-
-		var formData = $("#form").serialize();
-
-		var person = {
-			"isin" : isin,
-			"name" : name,
-			"Performance Year1" : performance_1yr,
-			"Performance Year2" : performance_2yr,
-			"Performance Year3" : performance_3yr,
-
-		};
-
+	
+	function deleteItem(isin) {
+		
 		$.ajax({
-			url : "/TrainingApp/delete",
-			method : "POST",
-			data : formData,
+			url : '/TrainingApp/delete' + '?' + $.param({"isin": isin}),
+			 type: 'DELETE',
+			data :{
+				"isin": isin
+			},
 			success : function(data, status, xhr) {
-				$("#status_text").html(data);
-				$('#isin').val();
-				$('#name').val('');
-				$('#Performance Year1').val('');
-				$('#Performance Year2').val('');
-				$('#Performance Year3').val('');
+				console.log(data);
+				_removeDom(data);
 
 			}
 
 		});
 
-	});
-});
+	}
+	
+	function _removeDom(data) {
+		var row = $('<tr class="performance" id="'+data.isin+'"></tr>');
+		
+		row.remove("<td><button type='button' onclick='deleteValue("+data.isin+")' > Delete </button></td></td>");
+		row.remove("<td class ='isinNumber'>"+data.isin+"</td>");
+		row.remove("<td class = 'name'>"+data.name+"</td>");
+		row.remove("<td class='perf1'>"+data.performance_1yr+"</td>");
+		row.remove("<td class='perf2'>"+data.performance_2yr+"</td>");
+		row.remove("<td class='perf3'>"+data.performance_3yr+"</td>");
+		row.remove("<td class='total"+data.isin+"'></td>");
+		row.remove("<td><button type='button' id='"+data.isin+"'> Total </button></td></td>");
+		$("#myTbody").empty(row)
+		$("#" + data.isin).on("click",remove);
+	}

@@ -8,16 +8,16 @@ public class JsonObject implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int isin;
+	private Long isin;
 	private String name;
 	private double performance_1yr;
 	private double performance_2yr;
 	private double performance_3yr;
 	
-	public int getIsin() {
+	public long getIsin() {
 		return isin;
 	}
-	public void setIsin(int i) {
+	public void setIsin(long i) {
 		this.isin = i;
 	}
 	public String getName() {

@@ -27,12 +27,12 @@ public class PersonDaoImpl implements PersonDao {
 	}
 
 	@Override
-	public void delete(int pk) {
-		session.getCurrentSession().delete(getPerson(pk));
+	public void delete(Long isin) {
+		session.getCurrentSession().delete(getPerson(isin));
 	}
 
 	@Override
-	public Person getPerson(int isin) {
+	public Person getPerson(Long isin) {
 		return (Person) session.getCurrentSession().get(Person.class, isin);
 	}
 

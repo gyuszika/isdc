@@ -12,7 +12,6 @@
 <script src="/TrainingApp/javascript/edit.js"></script>
 <script src="/TrainingApp/javascript/delete.js"></script>
 <script src="/TrainingApp/javascript/getContent.js"></script>
-<script src="/TrainingApp/javascript/calculate.js"></script>
 <script src="//code.jquery.com/jquery.min.js"></script>
 
 <title>Person Funds</title>
@@ -30,7 +29,14 @@
 		text-align: left;
 		padding: 3px;
 	}
-
+	
+	th {
+		border: 1px;
+		text-align: left;
+		padding: 3px;
+	}
+	
+	
 </style>
 	</head>
 <body>
@@ -43,7 +49,7 @@
 			</tr>
 			<tr>
 				<td>Person ISIN</td>
-				<td><input type="text" name="isin" value="" /></td>
+				<td><input type="text" name="isin" value="" maxlength="13"/></td>
 			</tr>
 			<tr>
 				<td>Name</td>
@@ -89,14 +95,16 @@
 	<table id="myTable" border="1px">
 	
 	<caption><b>Person List</b></caption>
-	
+	<button id="clear_all" type="button" name="clearAll">Clear List</button>
 		 <tr>
-	 		<th>ISIN</td>
-			<th>Name</td>
+		 	<th class="empty"></th>
+	 		<th>ISIN</th>
+			<th>Name</th>
 			<th>Performance 1st Year</th>
 			<th>Performance 2nd Year</th>
 			<th>Performance 3rd Year</th>
 			<th>Total</th>
+			<th class="empty"></th>
 		</tr>	
 	
 	 <tbody id="myTbody"> </tbody>

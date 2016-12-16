@@ -48,7 +48,6 @@ $(document).ready(function() {
 		persons.forEach(function (person) {
 			if (person.isin === +isin) {
 				found = true;
-				alert("Person already in the list");
 			}
 		});
 		if (found) {
@@ -56,7 +55,7 @@ $(document).ready(function() {
 		}
 		
 			$.ajax({
-				url : "/TrainingApp/getPerson",
+				url : "/TrainingApp/getPerson" ,
 				method : "GET",
 				data : {
 					"isin": isin
@@ -94,20 +93,22 @@ $(document).ready(function() {
 	
 	function calculate (event) {
 		console.log(isin);
+		
 		var table = $(this).parents('tr');
 		
 		var performance_1yr = table.find('.perf1').text();
 		var performance_2yr = table.find('.perf2').text();
 		var performance_3yr = table.find('.perf3').text();
-		
 		var total = parseFloat(performance_1yr) + parseFloat(performance_2yr) +  parseFloat(performance_3yr);
 		
+		var isinNumber = parseInt(table.find('.isinNumber').text());
+	
 		$.ajax({
 			url : "/TrainingApp/person",
 			method : "POST",
 			success : function(status, xhr) {
 				$("#status_text").html();
-				$(this).closest("td.total").find("#totalSum").append(total);
+				$('.total' +isinNumber ).append(total);
 				
 			}
 
@@ -117,15 +118,22 @@ $(document).ready(function() {
 	function _createDom(data) {
 		var newRow = $('<tr class="performance"></tr>');
 		
-		newRow.append("<td>"+data.isin+"</td>");
-		newRow.append("<td>"+data.name+"</td>");
+		newRow.append("<td><button type='button' onclick='deleteValue("+data.isin+")' > Delete </button></td></td>");
+		newRow.append("<td class ='isinNumber'>"+data.isin+"</td>");
+		newRow.append("<td class = 'name'>"+data.name+"</td>");
 		newRow.append("<td class='perf1'>"+data.performance_1yr+"</td>");
 		newRow.append("<td class='perf2'>"+data.performance_2yr+"</td>");
 		newRow.append("<td class='perf3'>"+data.performance_3yr+"</td>");
-		newRow.append("<td class='total' id='totalSum'></td>");
+		newRow.append("<td class='total"+data.isin+"'></td>");
 		newRow.append("<td><button type='button' id='"+data.isin+"'> Total </button></td></td>");
 		$("#myTbody").append(newRow)
 		
 		$("#" + data.isin).click(calculate);
 	}
+	
+		
+	$("#clear_all").click(function() {
+		$("#myTbody").empty();
+			
+		});
 });
