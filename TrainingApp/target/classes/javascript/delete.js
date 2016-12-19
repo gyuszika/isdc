@@ -26,8 +26,8 @@ function deleteValue(x) {
 	function deleteItem(isin) {
 		
 		$.ajax({
-			url : '/TrainingApp/delete' + '?' + $.param({"isin": isin}),
-			 type: 'DELETE',
+			url : '/TrainingApp/delete',
+			method: 'GET',
 			data :{
 				"isin": isin
 			},
@@ -35,6 +35,9 @@ function deleteValue(x) {
 				console.log(data);
 				_removeDom(data);
 
+			},
+			error: function (data) {
+				console.log('failed', data);
 			}
 
 		});
@@ -52,6 +55,4 @@ function deleteValue(x) {
 		row.remove("<td class='perf3'>"+data.performance_3yr+"</td>");
 		row.remove("<td class='total"+data.isin+"'></td>");
 		row.remove("<td><button type='button' id='"+data.isin+"'> Total </button></td></td>");
-		$("#myTbody").empty(row)
-		$("#" + data.isin).on("click",remove);
 	}

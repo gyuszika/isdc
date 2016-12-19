@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="/WEB-INF/jsp/includes.jsp"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,6 +15,10 @@
 <script src="/TrainingApp/javascript/delete.js"></script>
 <script src="/TrainingApp/javascript/getContent.js"></script>
 <script src="//code.jquery.com/jquery.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
 
 <title>Person Funds</title>
 
@@ -22,7 +28,6 @@
 		border-collapse: collapse;
 		font-family: arial, sans-serif;
 	}
-	
 	
 	tr {
 		border: 1px;
@@ -35,48 +40,49 @@
 		text-align: left;
 		padding: 3px;
 	}
+	</style>
 	
-	
-</style>
-	</head>
+</head>
+
 <body>
+	
 	<h1>Person Data</h1>
-	<form id="form">
+	<form id="form" >
 		<table id ="register">
 			<tr>
 				<td>Person ID</td>
-				<td><input type="text" name="pk" value="" /></td>
+				<td><input type="text" name="pk" /></td>
 			</tr>
 			<tr>
 				<td>Person ISIN</td>
-				<td><input type="text" name="isin" value="" maxlength="13"/></td>
+				<td><input type="text" name="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57' /></td>
 			</tr>
 			<tr>
 				<td>Name</td>
-				<td><input type="text" name="name" value="" /></td>
+				<td><input type="text" name="name" /></td>
 			</tr>
 			<tr>
 				<td>Performance Yr1</td>
-				<td><input type="text" name="performance_1yr" value="" /></td>
+				<td><input type="number" name="performance_1yr" step="any" /></td>
 			</tr>
 			<tr>
 				<td>Performance Yr2</td>
-				<td><input type="text" name="performance_2yr" value="" /></td>
+				<td><input type="number" name="performance_2yr" step="any" /></td>
 			</tr>
 			<tr>
 				<td>Performance Yr3</td>
-				<td><input type="text" name="performance_3yr" value="" /></td>
+				<td><input type="number" name="performance_3yr" step="any" /></td>
 			</tr>
 
 			<tr>
 				<td colspan="2">
 					<button id="btn_add" type="submit" name="add">Add</button>
 					<button id="btn_edit" type="submit" name="edit">Edit</button>
-					<button id="btn_delete" type="button" name="delete">Delete</button>
 				</td>
 			</tr>
 		</table>
 	</form>
+	
 	<br>
 
 	<h2>Table Contents</h2>

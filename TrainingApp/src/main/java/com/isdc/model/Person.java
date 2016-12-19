@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 
+
 @Entity
 @Table(name = "funds")
 public class Person {
@@ -23,6 +24,7 @@ public class Person {
 	@Column
 	private Long isin;
 	
+	@NotNull
 	@Column
 	private String name;
 

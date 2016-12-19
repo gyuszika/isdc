@@ -31,6 +31,8 @@ public class PersonController {
 		map.put("personList", personService.getAllPerson());
 		return "person";
 	}
+	
+	
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String addValue(@ModelAttribute Person person, BindingResult result, Map<String, Object> map) {
@@ -53,10 +55,10 @@ public class PersonController {
 	}
 
 
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public String deleteValue(@RequestParam(name = "isin") Long isin) {
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	@ResponseBody
+	public void deleteValue(@RequestParam(name = "isin") Long isin) {
 		personService.delete(isin);
-		return "person";
 	}
 
 	@RequestMapping(value = "/home", method = RequestMethod.GET)

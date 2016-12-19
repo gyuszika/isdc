@@ -1,5 +1,22 @@
 $(document).ready(function(){
-function add() {
+	$("#form").validate({
+		rules:{
+			name:"required",
+			isin:{
+				required: true,
+				minlength: 13
+			},
+		},
+		messages: {
+			name:"Please enter your full name!",
+			isin: {
+				required:"Please add your ISIN",
+				minlength:"Your ISIN must contain 13 digits!"
+			},
+		}
+	});
+
+	function add() {
 		var ajaxRequest;
 
 		try {
@@ -22,6 +39,9 @@ function add() {
 	}
 
 	$("#btn_add").click(function(e)  {
+		if (!$('#form').valid()) {
+			return;
+		}
 		e.preventDefault();
 		 
 		var isin = $('#isin').val();

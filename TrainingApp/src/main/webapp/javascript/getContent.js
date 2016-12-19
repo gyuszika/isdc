@@ -27,7 +27,7 @@ $(document).ready(function() {
 		  var value = $(this).val();
 		  var patt = new RegExp(value, "i");
 
-		  $('#myTable').find('tr').each(function() {
+		  $('#myTbody').find('tr').each(function() {
 		    if (!($(this).find('td').text().search(patt) >= 0)) {
 		      $(this).not('.myHead').hide();
 		    }
@@ -42,6 +42,7 @@ $(document).ready(function() {
 
 	$("#btn_getPerson").click(function() {
 		
+		
 		var isin = $("#isin").val(),
 			found = false;
 
@@ -51,10 +52,12 @@ $(document).ready(function() {
 			}
 		});
 		if (found) {
+			$("#myTbody").empty();
 			return;
 		}
 		
 			$.ajax({
+				
 				url : "/TrainingApp/getPerson" ,
 				method : "GET",
 				data : {

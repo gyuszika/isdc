@@ -27,7 +27,7 @@ $(document).ready(function() {
 		  var value = $(this).val();
 		  var patt = new RegExp(value, "i");
 
-		  $('#myTable').find('tr').each(function() {
+		  $('#myTbody').find('tr').each(function() {
 		    if (!($(this).find('td').text().search(patt) >= 0)) {
 		      $(this).not('.myHead').hide();
 		    }
@@ -42,6 +42,7 @@ $(document).ready(function() {
 
 	$("#btn_getPerson").click(function() {
 		
+		
 		var isin = $("#isin").val(),
 			found = false;
 
@@ -51,10 +52,12 @@ $(document).ready(function() {
 			}
 		});
 		if (found) {
+			$("#myTbody").empty();
 			return;
 		}
 		
 			$.ajax({
+				
 				url : "/TrainingApp/getPerson" ,
 				method : "GET",
 				data : {
@@ -119,7 +122,7 @@ $(document).ready(function() {
 		var newRow = $('<tr class="performance"></tr>');
 		
 		newRow.append("<td><button type='button' onclick='deleteValue("+data.isin+")' > Delete </button></td></td>");
-		newRow.append("<i>"+"<td class ='isinNumber'>"+data.isin+"</td>"+"</i>");
+		newRow.append("<td class ='isinNumber'>"+data.isin+"</td>");
 		newRow.append("<td class = 'name'>"+data.name+"</td>");
 		newRow.append("<td class='perf1'>"+data.performance_1yr+"</td>");
 		newRow.append("<td class='perf2'>"+data.performance_2yr+"</td>");

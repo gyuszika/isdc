@@ -10,8 +10,9 @@ public interface PersonService {
 	public void edit(Person person);
 
 	public void delete(Long isin);
-	
+
 	public Person getPerson(Long isin);
 
 	public List getAllPerson();
+
 }
