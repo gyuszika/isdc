@@ -14,29 +14,28 @@
 <script src="/TrainingApp/javascript/edit.js"></script>
 <script src="/TrainingApp/javascript/delete.js"></script>
 <script src="/TrainingApp/javascript/getContent.js"></script>
+<script src="/TrainingApp/javascript/editable.js"></script>
 <script src="//code.jquery.com/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
-
 <title>Person Funds</title>
 
 	<style>
 	table#myTable {
 		font-family: arial, sans-serif;
-		border-collapse: collapse;
 		font-family: arial, sans-serif;
 	}
 	
 	tr {
-		border: 1px;
+		border: 0px;
 		text-align: left;
 		padding: 3px;
 	}
 	
 	th {
-		border: 1px;
+		border: 0px;
 		text-align: left;
 		padding: 3px;
 	}
@@ -77,7 +76,6 @@
 			<tr>
 				<td colspan="2">
 					<button id="btn_add" type="submit" name="add">Add</button>
-					<button id="btn_edit" type="submit" name="edit">Edit</button>
 				</td>
 			</tr>
 		</table>
@@ -111,6 +109,7 @@
 			<th>Performance 3rd Year</th>
 			<th>Total</th>
 			<th class="empty"></th>
+			<th class="save"></th>
 		</tr>	
 	
 	 <tbody id="myTbody"> </tbody>

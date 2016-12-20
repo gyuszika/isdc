@@ -1,6 +1,6 @@
 function deleteValue(x) {
 		var ajaxRequest;
-
+		
 		try {
 
 			ajaxRequest = new XMLHttpRequest();
@@ -34,7 +34,6 @@ function deleteValue(x) {
 			success : function(data, status, xhr) {
 				console.log(isin);
 				_removeDom(isin);
-				
 
 			},
 			error: function (data) {
@@ -46,6 +45,6 @@ function deleteValue(x) {
 	}
 	
 	function _removeDom(isin) {
-		var row = $('<tr class="performance" id="'+isin+'"></tr>');
-		$("#myTbody").remove(row)
+		var row = $('tr.performance'+isin);
+		$(row).remove();
 	}

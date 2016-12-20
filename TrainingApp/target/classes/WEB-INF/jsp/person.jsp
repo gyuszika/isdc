@@ -14,12 +14,12 @@
 <script src="/TrainingApp/javascript/edit.js"></script>
 <script src="/TrainingApp/javascript/delete.js"></script>
 <script src="/TrainingApp/javascript/getContent.js"></script>
+<script src="/TrainingApp/javascript/editable.js"></script>
 <script src="//code.jquery.com/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
-
 <title>Person Funds</title>
 
 	<style>

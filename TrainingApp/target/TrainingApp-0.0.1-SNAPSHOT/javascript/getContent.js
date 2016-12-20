@@ -42,17 +42,16 @@ $(document).ready(function() {
 
 	$("#btn_getPerson").click(function() {
 		
-		
 		var isin = $("#isin").val(),
 			found = false;
 
 		persons.forEach(function (person) {
 			if (person.isin === +isin) {
 				found = true;
+				
 			}
 		});
 		if (found) {
-			$("#myTbody").empty();
 			return;
 		}
 		
@@ -119,7 +118,7 @@ $(document).ready(function() {
 	}
 	
 	function _createDom(data) {
-		var newRow = $('<tr class="performance"></tr>');
+		var newRow = $("<tr class='performance"+data.isin+"'></tr>");
 		
 		newRow.append("<td><button type='button' onclick='deleteValue("+data.isin+")' > Delete </button></td></td>");
 		newRow.append("<td class ='isinNumber'>"+data.isin+"</td>");
@@ -137,6 +136,7 @@ $(document).ready(function() {
 		
 	$("#clear_all").click(function() {
 		$("#myTbody").empty();
+		persons=[];
 			
 		});
 });
