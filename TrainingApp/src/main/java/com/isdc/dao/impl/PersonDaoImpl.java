@@ -17,7 +17,6 @@ public class PersonDaoImpl implements PersonDao {
 
 	@Override
 	public void add(Person person) {
-
 		session.getCurrentSession().save(person);
 	}
 

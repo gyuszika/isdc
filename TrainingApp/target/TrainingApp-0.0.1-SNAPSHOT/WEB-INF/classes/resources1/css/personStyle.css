@@ -1,0 +1,38 @@
+body {
+    
+}
+div#wholeBody {
+	border-radius: 25px;
+	text-align: center;
+	margin-top: 100px;
+	margin-bottom: 100px;
+	margin-right: 500px;
+	margin-left: 500px;
+	background-color: lightblue;
+}
+
+table#register {
+	width: 190px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+tr.mainTableRow {
+	border-collapse: collapse;
+	text-align: centre;
+	background-color: orange;
+}
+
+table#myTable {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+tbody#myTbody {
+	align: center;
+	border: 1px solid black;
+	font-family: arial, sans-serif;
+	font-family: arial, sans-serif;
+	text-align: center;
+	background-color: white;
+}

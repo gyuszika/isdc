@@ -13,12 +13,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "funds")
 public class Person {
-	
-	@NotNull
-	@Column
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int pk;
-	
+
 	@Id
 	@NotNull
 	@Column
@@ -41,23 +36,14 @@ public class Person {
 
 	}
 
-	public Person(int pk, Long isin, String name, double performance_1yr, double performance_2yr,
+	public Person(Long isin, String name, double performance_1yr, double performance_2yr,
 			double performance_3yr) {
 		super();
-		this.pk = pk;
 		this.isin = isin;
 		this.name = name;
 		this.performance_1yr = performance_1yr;
 		this.performance_2yr = performance_2yr;
 		this.performance_3yr = performance_3yr;
-	}
-
-	public int getPk() {
-		return pk;
-	}
-
-	public void setPk(int pk) {
-		this.pk = pk;
 	}
 
 	public Long getIsin() {
@@ -102,7 +88,7 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person [pk=" + pk + ", isin=" + isin + ", name=" + name + ", performance_1yr=" + performance_1yr
+		return "Person [isin=" + isin + ", name=" + name + ", performance_1yr=" + performance_1yr
 				+ ", performance_2yr=" + performance_2yr + ", performance_3yr=" + performance_3yr + "]";
 	}
 

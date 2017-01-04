@@ -21,7 +21,7 @@
 	</mvc:annotation-driven>
 
 	<mvc:annotation-driven/>
-	<mvc:resources mapping="/javascript/**" location="/javascript/" />
+	<mvc:resources mapping="/resources1/**" location="/resources1/" />
 
 	<bean p:location="/WEB-INF/jdbc.properties"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
