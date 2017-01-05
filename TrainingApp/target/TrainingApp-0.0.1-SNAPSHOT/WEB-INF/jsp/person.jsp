@@ -31,11 +31,13 @@
 					<tr><td>Performance Year1<input type="number" name="performance_1yr" ng-model="performance_1yr" step="any" /></td></tr>
 					<tr><td>Performance Year2<input type="number" name="performance_2yr" ng-model="performance_2yr" step="any" /></td></tr>
 					<tr><td>Performance Year3<input type="number" name="performance_3yr" ng-model="performance_3yr" step="any" /></td></tr>
-					<tr ng-if="myForm.isin.$touched && myForm.isin.$valid && myForm.name.$valid"><td><input type="submit" value="Add"></td></tr>
+					<tr ng-if="myForm.isin.$touched && myForm.isin.$valid && myForm.name.$valid"><td><input type="submit" value="Add"/></td></tr>
 			</table>
 	</form>
+	
 	<div><font color="red"><b>{{error}}</b></font></div>
-	<div ng-controller="selectCtrl">
+	
+	<div >
 		<h2>Table Contents</h2>
 				<input type="submit" value="Get all" ng-click="getAll()"> 
 		
@@ -54,10 +56,11 @@
 			</div>
 		
 
-		<table id="myTable" ng-model="myTable" ng-show="persons">
+		<table id="myTable" ng-model="myTable" ng-show="persons" >
 				<thead >
 					<tr class="mainTableRow">
-						<th></th>
+						<th><button ng-click="toggleAll()" ng-model="isAllSelected">Select All</button></th>
+						<th><button ng-click="deleteSelected()">Delete</button></th>
 						<th>ISIN</th>
 						<th>Name</th>
 						<th>Perf-1st Year</th>
@@ -66,28 +69,28 @@
 						<th>Total</th>
 					</tr>
 				</thead>
+				
 			<tbody>
 				<tr ng-repeat="person in persons | orderBy: tableSort | filter:searchText">
-					<td><input type="checkbox" ng-checked="exists(person, selected)" ng-click="toggle(person, selected)"/></td>
+					<td></td>
+<!-- 					<td><input type="checkbox" ng-model="person.checked" ng-checked="exists(person, selected)" ng-click="toggle(person, selected)" /></td> -->
+										<td><input type="checkbox" ng-model="person.checked" /></td>
+<!-- 					<td><input type="checkbox" ng-model="checked"/></td> -->
 					<td><i>{{person.isin}}</td>
 					<td><b>{{person.name}}</b></td>
-					<td>{{person.performance_1yr}}</td>
-					<td>{{person.performance_2yr}}</td>
-					<td>{{person.performance_3yr}}</td>
+					<td>{{person.performance_1yr | number}}</td>
+					<td>{{person.performance_2yr | number}}</td>
+					<td>{{person.performance_3yr | number}}</td>
 					<td ng-init="person.total = person.performance_1yr + person.performance_2yr + person.performance_3yr"><b>{{person.total | number}}</b></td>
 				</tr>
 			</tbody>
 		</table>
-			<div flex="100">
-				<h2 class="md-title">Selected Items</h2>
-				<code style="display: block; padding: 8px;">{{selected | json}}</code>
-			</div>
+			
 		</div>
 </body>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script data-require="angular.js@1.6.0" data-semver="1.6.0" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.js"></script>
 <script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
-<script src="/TrainingApp/resources1/javascript/selectCtrl.js"></script>
 <script src="/TrainingApp/resources1/javascript/edit.js"></script>
 <script src="/TrainingApp/resources1/javascript/delete.js"></script>
 <script src="/TrainingApp/resources1/javascript/editable.js"></script>

@@ -36,18 +36,29 @@ var getAllPersonCtrl = function($scope, $http) {
 	
 	};
 	
-
 		$scope.deleteSelected = function() {
 		var data = $scope.persons;
+		
+			angular.forEach(data,function(value, index) {
+				if (value.checked) {
+					$http.get("/TrainingApp/delete?isin=" + value.isin);
+				};
+				
+			});
+		};
+	
+		  $scope.checkAll = function () {
+		        if ($scope.selectedAll) {
+		            $scope.selectedAll = true;
+		        } else {
+		            $scope.selectedAll = false;
+		        }
+		        angular.forEach($scope.persons, function (person) {
+		            person.checked = $scope.selectedAll;
+		        });
 
-		angular.forEach(data,function(value, key) 
-		{
-
-			if (value.checked) {
-				 $http.get("/TrainingApp/delete?isin=" + value.isin)
-			};
-		});
-	};
+		    };
+		    
 	
 };
 app.controller("getAllPersonCtrl", [ "$scope", "$http", getAllPersonCtrl ]);

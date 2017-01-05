@@ -35,10 +35,41 @@ var getAllPersonCtrl = function($scope, $http) {
 		$http.post("/TrainingApp/add", person, config)
 	
 	};
-	
-	$scope.checkboxModel = {
-		       value2 : 'YES'
-		     };
 
+		$scope.deleteSelected = function() {
+		var data = $scope.persons;
+		
+		for(var i = 0; i < data.length;){
+			if (data[i].checked) {
+				$scope.persons.splice(data[i],1);
+				$http.get("/TrainingApp/delete?isin=" + data[i].isin);
+				i=0;
+			}
+				i++;
+			};
+		};
+		
+		
+//		angular.forEach(data,function(value, index) 
+//		{
+//
+//			if (value.checked) {
+//				$scope.persons.splice(index,1);
+//				$http.get("/TrainingApp/delete?isin=" + value.isin);
+//			};
+//			
+//		});
+	};
+	
+	$scope.toggleAll = function() {
+	     var toggleStatus = !$scope.isAllSelected;
+	     angular.forEach($scope.persons, function(itm){ itm.checked = toggleStatus; });
+	   
+	  }
+	  
+	  $scope.optionToggled = function(){
+	    $scope.isAllSelected = $scope.persons.every(function(itm){ return itm.checked; })
+	  }
+	
 };
 app.controller("getAllPersonCtrl", [ "$scope", "$http", getAllPersonCtrl ]);

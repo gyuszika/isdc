@@ -12,12 +12,11 @@
 <title>Person Funds</title>
 </head>
 <link rel="stylesheet" type="text/css" href="/TrainingApp/resources1/css/personStyle.css">
-<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
 <body >
 
 <div id="wholeBody" ng-controller="getAllPersonCtrl">
 <!-- <div id="wholeBody" > -->
-	<h1>Person Data</h1>
+	<h2>Person Data</h2>
 	
 	<form name="myForm" id="form" ng-submit="add()">
 	
@@ -39,10 +38,12 @@
 	
 	<div >
 		<h2>Table Contents</h2>
-				<input type="submit" value="Get all" ng-click="getAll()"> 
+				<input type="submit" ng-model="persons" value="Get all" ng-click="getAll()" > 
 		
 			<div ng-show="persons">
 					<h2>Person List</h2> 
+					
+					Select All<input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
 					<button ng-click="persons=[]">Clear List</button>
 					<input placeholder="Search person..." ng-model="searchText"> &nbsp &nbsp &nbsp
 					
@@ -59,8 +60,9 @@
 		<table id="myTable" ng-model="myTable" ng-show="persons" >
 				<thead >
 					<tr class="mainTableRow">
+						<th></th>
 						<th><button ng-click="deleteSelected()">Delete</button></th>
-						<th>ISIN</th>
+						<th>Isin</th>
 						<th>Name</th>
 						<th>Perf-1st Year</th>
 						<th>Perf-2nd Year</th>
@@ -71,33 +73,26 @@
 				
 			<tbody>
 				<tr ng-repeat="person in persons | orderBy: tableSort | filter:searchText">
-					<td><input type="checkbox" ng-model="person.checked" ng-checked="exists(person, selected)" ng-click="toggle(person, selected)"/></td>
-<!-- 					<td><input type="checkbox" ng-model="checked"/></td> -->
+					<td></td>
+					<td><input type="checkbox" ng-model="person.checked" /></td>
 					<td><i>{{person.isin}}</td>
 					<td><b>{{person.name}}</b></td>
-					<td>{{person.performance_1yr}}</td>
-					<td>{{person.performance_2yr}}</td>
-					<td>{{person.performance_3yr}}</td>
+					<td>{{person.performance_1yr | number}}</td>
+					<td>{{person.performance_2yr | number}}</td>
+					<td>{{person.performance_3yr | number}}</td>
 					<td ng-init="person.total = person.performance_1yr + person.performance_2yr + person.performance_3yr"><b>{{person.total | number}}</b></td>
 				</tr>
 			</tbody>
 		</table>
-			<div flex="100">
-				<h2 class="md-title">Selected Items</h2>
-				<code style="display: block; padding: 8px;">{{selected | json}}</code>
-			</div>
+			
 		</div>
 </body>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script data-require="angular.js@1.6.0" data-semver="1.6.0" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
 <script src="/TrainingApp/resources1/javascript/edit.js"></script>
 <script src="/TrainingApp/resources1/javascript/delete.js"></script>
 <script src="/TrainingApp/resources1/javascript/editable.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 </html>

@@ -36,9 +36,37 @@ var getAllPersonCtrl = function($scope, $http) {
 	
 	};
 	
-	$scope.checkboxModel = {
-		       value2 : 'YES'
-		     };
+		$scope.deleteSelected = function() {
+		var data = $scope.persons;
+		
+			angular.forEach(data,function(value, index) {
+				if (value.checked) {
+					$http.get("/TrainingApp/delete?isin=" + value.isin);
+				};
+				
+			});
+		};
+	
+		  $scope.checkAll = function () {
+		        if ($scope.selectedAll) {
+		            $scope.selectedAll = true;
+		        } else {
+		            $scope.selectedAll = false;
+		        }
+		        angular.forEach($scope.persons, function (person) {
+		            person.checked = $scope.selectedAll;
+		        });
 
+		    };
+		    
+		    it('should check ngHide', function() {
+		    	  var checkbox = element(by.model('persons'));
+		    	  var checkElem = element(by.css('.check-element'));
+
+		    	  expect(checkElem.isDisplayed()).toBe(true);
+		    	  checkbox.click();
+		    	  expect(checkElem.isDisplayed()).toBe(false);
+		    	});
+	
 };
 app.controller("getAllPersonCtrl", [ "$scope", "$http", getAllPersonCtrl ]);
