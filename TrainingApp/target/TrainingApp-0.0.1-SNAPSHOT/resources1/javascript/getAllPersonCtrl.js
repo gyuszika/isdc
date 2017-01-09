@@ -1,4 +1,5 @@
-var app = angular.module("myApp", []);
+var app = angular.module("myApp", ['ngMaterial']);
+
 var getAllPersonCtrl = function($scope, $http) {
 
 	var onUserComplete = function(response) {
@@ -13,10 +14,12 @@ var getAllPersonCtrl = function($scope, $http) {
 		$scope.error = "Couldn't complete request";
 	};
 
+	//retrieves complete list fro mdatabase
 	$scope.getAll = function() {
 		$http.get("/TrainingApp/getAllPerson").then(onUserComplete, onError);
 	};
 	
+	//funtion for adding new person
 	$scope.add = function() {
 
 		var person = $.param({
@@ -33,43 +36,55 @@ var getAllPersonCtrl = function($scope, $http) {
                 }
         };
 		$http.post("/TrainingApp/add", person, config)
+		
+		//on click (Add) button it hides data input form
+		$scope.addNewPerson = true;
+        $scope.toggleAddNew = function() {
+         $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
+        };
 	
 	};
-
+		
+		//delete selected row/rows
 		$scope.deleteSelected = function() {
 		var data = $scope.persons;
+		var selectedObject=[];
 		
-		for(var i = 0; i < data.length;){
-			if (data[i].checked) {
-				$scope.persons.splice(data[i],1);
-				$http.get("/TrainingApp/delete?isin=" + data[i].isin);
-				i=0;
+		angular.forEach(data, function(value, index) {
+			if (!value.checked) {
+				selectedObject.push(value);
+			} else {
+				$http.get("/TrainingApp/delete?isin=" + value.isin);
 			}
-				i++;
-			};
+			;
+		});
+			$scope.persons = selectedObject;
 		};
-		
-		
-//		angular.forEach(data,function(value, index) 
-//		{
-//
-//			if (value.checked) {
-//				$scope.persons.splice(index,1);
-//				$http.get("/TrainingApp/delete?isin=" + value.isin);
-//			};
-//			
-//		});
-	};
 	
-	$scope.toggleAll = function() {
-	     var toggleStatus = !$scope.isAllSelected;
-	     angular.forEach($scope.persons, function(itm){ itm.checked = toggleStatus; });
-	   
-	  }
-	  
-	  $scope.optionToggled = function(){
-	    $scope.isAllSelected = $scope.persons.every(function(itm){ return itm.checked; })
-	  }
+		  //select/unselect all table rows
+		  $scope.checkAll = function () {
+		        if ($scope.selectedAll) {
+		            $scope.selectedAll = true;
+		        } else {
+		            $scope.selectedAll = false;
+		        }
+		        angular.forEach($scope.persons, function (person) {
+		            person.checked = $scope.selectedAll;
+		        });
+
+		    };
+		    
+		    //toggle between show/hide input form for adding a new person
+		    $scope.addNewPerson = true;
+	        $scope.toggleAddNew = function() {
+	        $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
+	        };
+	     
+	        //toggle between show/hide table
+	        $scope.personsTable = true;
+	        $scope.toggleHideList = function() {
+	        $scope.personsTable = $scope.personsTable === false ? true: false;
+	        };
 	
 };
 app.controller("getAllPersonCtrl", [ "$scope", "$http", getAllPersonCtrl ]);

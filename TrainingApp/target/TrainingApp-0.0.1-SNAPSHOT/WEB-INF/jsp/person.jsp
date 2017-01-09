@@ -1,81 +1,140 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ include file="/WEB-INF/jsp/includes.jsp"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<!-- <html> -->
-<html ng-app="myApp">
+<html ng-app="myApp" ng-cloak>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 <title>Person Funds</title>
 </head>
 <link rel="stylesheet" type="text/css" href="/TrainingApp/resources1/css/personStyle.css">
-<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet prefetch" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 <body >
 
 <div id="wholeBody" ng-controller="getAllPersonCtrl">
-<!-- <div id="wholeBody" > -->
-	<h1>Person Data</h1>
 	
-	<form name="myForm" id="form" ng-submit="add()">
+	<h2>Table Contents</h2>
 	
-			<table id="register">
-					
-					<tr><td>ISIN<span ng-show="myForm.isin.$touched && myForm.isin.$invalid"><font color="red">is required!</font></span>
-					<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> Should contain 13 numbers</font></span>
-					<input type="text" name="isin" ng-minlength="13" ng-model="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57'required/></td></tr>
-					
-					<tr><td>Name<span ng-show="myForm.name.$touched && myForm.name.$invalid"><font color="red"> is required!</font></span><input type="text" name="name" ng-model="name" required/></td></tr>
-					<tr><td>Performance Year1<input type="number" name="performance_1yr" ng-model="performance_1yr" step="any" /></td></tr>
-					<tr><td>Performance Year2<input type="number" name="performance_2yr" ng-model="performance_2yr" step="any" /></td></tr>
-					<tr><td>Performance Year3<input type="number" name="performance_3yr" ng-model="performance_3yr" step="any" /></td></tr>
-					<tr ng-if="myForm.isin.$touched && myForm.isin.$valid && myForm.name.$valid"><td><input type="submit" value="Add"/></td></tr>
-			</table>
-	</form>
+	 <md-button ng-click="toggleAddNew()" class="md-primary md-raised">Add new person</md-button> 
+	 <md-button class="md-primary md-raised" ng-model="persons"  ng-click="toggleHideList(); getAll()">Get complete list</md-button> 
 	
-	<div><font color="red"><b>{{error}}</b></font></div>
-	
-	<div >
-		<h2>Table Contents</h2>
-				<input type="submit" value="Get all" ng-click="getAll()"> 
+	<div ng-hide="addNewPerson">
 		
-			<div ng-show="persons">
-					<h2>Person List</h2> 
-					<button ng-click="persons=[]">Clear List</button>
-					<input placeholder="Search person..." ng-model="searchText"> &nbsp &nbsp &nbsp
+		<h3>Person Data</h3>
+		<div>
+		<form name="myForm" id="form" >
+						
+						
+						<label for="isin">Isin</label>
+						<span ng-show="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> is required &</font></span>
+						<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> Should contain 13 numbers!</font></span>
+						<div >
+							<input class="form-control" style="width: 30%; margin: 0 auto" id="isin" type="text" name="isin" ng-minlength="13" ng-model="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
+						</div>
+
+						<label for="name">Name</label>
+						<span ng-show="myForm.name.$touched && myForm.name.$invalid"><font color="red"> is required!</font></span>
+						<div>
+							<input class="form-control" style="width: 30%; margin: 0 auto" id="name" type="text" name="name" ng-model="name" required/>
+						</div>
+
+						<label for="perf1">1<sup>st</sup> Year's Performance</label>
+						<div>
+						<input class="form-control" style="width: 30%; margin: 0 auto" id="perf1" type="number" name="performance_1yr" ng-model="performance_1yr" step="any" />
+						</div>
+
+						
+						<label for="perf2">2<sup>nd</sup> Year's Performance</label>
+						<div>
+						<input class="form-control" style="width: 30%; margin: 0 auto" id="perf2" type="number" name="performance_2yr" ng-model="performance_2yr" step="any" />
+						</div>
+
+						<label for="perf3">3<sup>rd</sup> Year's Performance</label>
+						<div>
+						<input class="form-control" style="width: 30%; margin: 0 auto" id="perf3" type="number" name="performance_3yr" ng-model="performance_3yr" step="any" />
+						</div>
+						
+						<div><md-button ng-disabled="myForm.isin.$invalid || myForm.name.$invalid" class="md-primary md-raised" ng-click="add(); toggleAddNew()" >Add</md-button></div>
+				
+		</form>
+		</div>
+	</div>
+
+		<div ng-if="status" id="status">
+			<b layout="row" layout-align="center center" class="md-padding">{{status}}</b>
+		</div>
+
+		<div><font color="red"><b>{{error}}</b></font></div>
+
+	<div ng-hide="personsTable">
+		
+			<div>
+					<h4>Person List</h4> 
 					
-						Order:
-						<select ng-model="tableSort">
-							<option value="+name">Name A-Z</option>
-							<option value="-name">Name Z-A</option>
-							<option value="-total">Total &uarr;</option>
-							<option value="+total">Total &darr;</option>
-						</select>
+					<md-button class="md-primary md-raised" ng-click="deleteSelected()">Delete</md-button>
+					<md-button class="md-primary md-raised" ng-click="">Edit</md-button>
+					<md-button class="md-primary md-raised" ng-click="toggleHideList()">Hide List</md-button>
+
+					<input class="form-control input-sm" style="width: 25%; margin: 0 auto" placeholder="Search person..." ng-model="searchText">
 			</div>
 		
-
-		<table id="myTable" ng-model="myTable" ng-show="persons" >
-				<thead >
+		<table ng-model="myTable" class="table table-hover">
+				<thead>
 					<tr class="mainTableRow">
-						<th><button ng-click="toggleAll()" ng-model="isAllSelected">Select All</button></th>
-						<th><button ng-click="deleteSelected()">Delete</button></th>
-						<th>ISIN</th>
-						<th>Name</th>
-						<th>Perf-1st Year</th>
-						<th>Perf-2nd Year</th>
-						<th>Perf-3rd Year</th>
-						<th>Total</th>
+						<td>Select All <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></td>
+						
+						<td><b>Isin</b></td>
+						
+						<td>
+							<a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+							<b>Name</b>
+							<span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+           					<span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
+						
+						<td>
+							<a href="#" ng-click="sortType = 'performance_1yr'; sortReverse = !sortReverse">
+							<b>Perf. 1st Year</b>
+							<span ng-show="sortType == 'performance_1yr' && !sortReverse" class="fa fa-caret-down"></span> 
+							<span ng-show="sortType == 'performance_1yr' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
+						
+						<td>
+							<a href="#" ng-click="sortType = 'performance_2yr'; sortReverse = !sortReverse">
+							<b>Perf. 2nd Year</b>
+							<span ng-show="sortType == 'performance_2yr' && !sortReverse" class="fa fa-caret-down"></span> 
+							<span ng-show="sortType == 'performance_2yr' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
+						
+						<td>
+							<a href="#" ng-click="sortType = 'performance_3yr'; sortReverse = !sortReverse">
+							<b>Perf. 3rd Year</b>
+							<span ng-show="sortType == 'performance_3yr' && !sortReverse" class="fa fa-caret-down"></span> 
+							<span ng-show="sortType == 'performance_3yr' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
+						
+						<td>
+							<a href="#" ng-click="sortType = 'total'; sortReverse = !sortReverse">
+							<b>Total</b>
+							<span ng-show="sortType == 'total' && !sortReverse" class="fa fa-caret-down"></span> 
+							<span ng-show="sortType == 'total' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
 					</tr>
 				</thead>
 				
 			<tbody>
-				<tr ng-repeat="person in persons | orderBy: tableSort | filter:searchText">
-					<td></td>
-<!-- 					<td><input type="checkbox" ng-model="person.checked" ng-checked="exists(person, selected)" ng-click="toggle(person, selected)" /></td> -->
-										<td><input type="checkbox" ng-model="person.checked" /></td>
-<!-- 					<td><input type="checkbox" ng-model="checked"/></td> -->
+				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText">
+					<td><input type="checkbox" ng-model="person.checked" /></td>
 					<td><i>{{person.isin}}</td>
 					<td><b>{{person.name}}</b></td>
 					<td>{{person.performance_1yr | number}}</td>
@@ -89,15 +148,13 @@
 		</div>
 </body>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script data-require="angular.js@1.6.0" data-semver="1.6.0" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
 <script src="/TrainingApp/resources1/javascript/edit.js"></script>
-<script src="/TrainingApp/resources1/javascript/delete.js"></script>
-<script src="/TrainingApp/resources1/javascript/editable.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </html>
