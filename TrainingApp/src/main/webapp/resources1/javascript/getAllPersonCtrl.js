@@ -1,6 +1,11 @@
-var app = angular.module("myApp", ['ngMaterial']);
+var app = angular.module("myApp", ['ngMaterial']).
+config(function($anchorScrollProvider) {
+  	
+    $anchorScrollProvider.disableAutoScrolling();
+  });
 
 var getAllPersonCtrl = function($scope, $http) {
+	
 
 	var onUserComplete = function(response) {
 		$scope.persons = response.data;
@@ -21,7 +26,7 @@ var getAllPersonCtrl = function($scope, $http) {
 	
 	//funtion for adding new person
 	$scope.add = function() {
-
+		
 		var person = $.param({
 			isin : $scope.isin,
 			name : $scope.name,
@@ -30,19 +35,35 @@ var getAllPersonCtrl = function($scope, $http) {
 			performance_3yr : $scope.performance_3yr
 		});
 		
+		var personToAdd = {
+			isin : $scope.isin,
+			name : $scope.name,
+			performance_1yr : $scope.performance_1yr,
+			performance_2yr : $scope.performance_2yr,
+			performance_3yr : $scope.performance_3yr
+		};
+		
 		var config = {
                 headers : {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                 }
         };
 		$http.post("/TrainingApp/add", person, config)
+		$scope.persons.push(personToAdd);
 		
-		//on click (Add) button it hides data input form
-		$scope.addNewPerson = true;
+		 //on click (Add) button it hides input form
+		$scope.addNewPerson = false;
         $scope.toggleAddNew = function() {
-         $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
+        $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
+        
+      //on click empties inputs from form
+		 $scope.isin = null;
+		 $scope.name = null;
+		 $scope.performance_1yr = null;
+		 $scope.performance_2yr = null;
+		 $scope.performance_3yr = null;
         };
-	
+        
 	};
 		
 		//delete selected row/rows
@@ -87,4 +108,5 @@ var getAllPersonCtrl = function($scope, $http) {
 	        };
 	
 };
-app.controller("getAllPersonCtrl", [ "$scope", "$http", getAllPersonCtrl ]);
+app.controller("getAllPersonCtrl", [ "$scope", "$http","$anchorScroll", getAllPersonCtrl ]);
+	
