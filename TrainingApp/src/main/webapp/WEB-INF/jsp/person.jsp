@@ -31,7 +31,7 @@
 						
 						
 						<label for="isin">Isin</label>
-						<span ng-show="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> is required &</font></span>
+						<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> is required &</font></span>
 						<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> Should contain 13 numbers!</font></span>
 						<div >
 							<input class="form-control" style="width: 30%; margin: 0 auto" id="isin" type="text" name="isin" ng-minlength="13" ng-model="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
@@ -75,15 +75,14 @@
 		
 			<div>
 					<h4>Person List</h4> 
-					
-					<md-button class="md-primary md-raised" ng-click="deleteSelected()">Delete</md-button>
+					<md-button class="md-primary md-raised" ng-disabled="isEnabled()" ng-click="showConfirm($event)">Delete</md-button>
 					<md-button class="md-primary md-raised" ng-click="">Edit</md-button>
 					<md-button class="md-primary md-raised" ng-click="toggleHideList()">Hide List</md-button>
-
 					<input class="form-control input-sm" style="width: 25%; margin: 0 auto" placeholder="Search person..." ng-model="searchText">
 			</div>
+<p></p>
 		
-		<table ng-model="myTable" class="table table-hover">
+		<table name="myTable" ng-model="myTable" class="table table-hover">
 				<thead>
 					<tr class="mainTableRow">
 						<td>Select All <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></td>
@@ -146,9 +145,11 @@
 		</table>
 			
 		</div>
+		</div>
 </body>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
