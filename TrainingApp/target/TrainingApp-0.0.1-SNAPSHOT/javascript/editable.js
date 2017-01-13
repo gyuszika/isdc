@@ -1,6 +1,6 @@
-$(function () {
-    $("#myTable td").click(function (e) {
-        e.preventDefault(); // <-- consume event
+function editItem() {
+    $("#myTbody td#editable").click(function (e) {
+    	e.preventDefault(); // <-- consume event
         e.stopImmediatePropagation();
         
         $this = $(this);
@@ -16,10 +16,10 @@ $(function () {
     });
 
     putOldValueBack = function () {
-        $("#myTable .editfield").each(function(){
+        $("#myTbody .editfield").each(function(){
             $this = $(this);
             var val = $this.val();
-            var td = $this.closest('td');
+            var td = $this.closest('td#editable');
             td.empty().html(val).data('editing', false);
             
         });
@@ -28,4 +28,4 @@ $(function () {
     $(document).click(function (e) {
         putOldValueBack();
     });
-});
+}

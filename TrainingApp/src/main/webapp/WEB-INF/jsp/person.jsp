@@ -14,12 +14,12 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <link rel="stylesheet prefetch" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-<body >
 
+<body >
 <div id="wholeBody" ng-controller="getAllPersonCtrl">
-	
+	<p align="right"><b>Time:</b> <span my-current-time="timeFormat"></span>&nbsp;&nbsp;</p>
 	<h2>Table Contents</h2>
-	
+	 
 	 <md-button ng-click="toggleAddNew()" class="md-primary md-raised">Add new person</md-button> 
 	 <md-button class="md-primary md-raised" ng-model="persons"  ng-click="toggleHideList(); getAll()">Get complete list</md-button> 
 	
@@ -75,17 +75,16 @@
 		
 			<div>
 					<h4>Person List</h4> 
-					<md-button class="md-primary md-raised" ng-disabled="isEnabled()" ng-click="showConfirm($event)">Delete</md-button>
-					<md-button class="md-primary md-raised" ng-click="">Edit</md-button>
+					<md-button class="md-primary md-raised" ng-disabled="isEnabled()" ng-click="showDeleteConfirm($event)">Delete</md-button>
 					<md-button class="md-primary md-raised" ng-click="toggleHideList()">Hide List</md-button>
 					<input class="form-control input-sm" style="width: 25%; margin: 0 auto" placeholder="Search person..." ng-model="searchText">
 			</div>
 <p></p>
 		
-		<table name="myTable" ng-model="myTable" class="table table-hover">
+		<table name="myTable" ng-model="myTable" class="table table-hover" >
 				<thead>
 					<tr class="mainTableRow">
-						<td>Select All <input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></td>
+						<td>Select All <br><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></td>
 						
 						<td><b>Isin</b></td>
 						
@@ -134,11 +133,25 @@
 			<tbody>
 				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText">
 					<td><input type="checkbox" ng-model="person.checked" /></td>
+					
 					<td><i>{{person.isin}}</td>
-					<td><b>{{person.name}}</b></td>
-					<td>{{person.performance_1yr | number}}</td>
-					<td>{{person.performance_2yr | number}}</td>
-					<td>{{person.performance_3yr | number}}</td>
+					
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.name}}</b></span>
+						<input ng-show="person.editing" ng-model="person.name" ng-blur="doneEditing(person)" autofocus size="6" />
+					</td>
+					
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.performance_1yr | number}}</b></span>
+               		 	<input type="text" ng-show="person.editing" ng-model="person.performance_1yr" ng-blur="doneEditing(person)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'  autofocus size="6"/>
+					</td>
+					
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.performance_2yr | number}}</b></span>
+               		 	<input type="text" ng-show="person.editing" ng-model="person.performance_2yr" ng-blur="doneEditing(person)" onkeypress='return event.charCode >= 48 && event.charCode <= 57' autofocus size="6"/>
+					</td>
+					
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.performance_3yr | number}}</b></span>
+               		 	<input type="text" ng-show="person.editing" ng-model="person.performance_3yr" ng-blur="doneEditing(person)" onkeypress='return event.charCode >= 48 && event.charCode <= 57' autofocus size="6"/>
+					</td>
+					
 					<td ng-init="person.total = person.performance_1yr + person.performance_2yr + person.performance_3yr"><b>{{person.total | number}}</b></td>
 				</tr>
 			</tbody>
@@ -156,6 +169,5 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
-<script src="/TrainingApp/resources1/javascript/edit.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </html>
