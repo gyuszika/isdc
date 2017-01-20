@@ -73,18 +73,18 @@ public class PersonController {
 		Person searchedPerson = personService.getPerson(isin);
 
 		jsonObj.setIsin(searchedPerson.getIsin());
-		jsonObj.setName(searchedPerson.getName());
-		jsonObj.setPerformance_1yr(searchedPerson.getPerformance_1yr());
-		jsonObj.setPerformance_2yr(searchedPerson.getPerformance_2yr());
-		jsonObj.setPerformance_3yr(searchedPerson.getPerformance_3yr());
+		jsonObj.setPersonName(searchedPerson.getPersonName());
+		jsonObj.setPerformance(searchedPerson.getPersonPerf());
 
 		return jsonObj;
 	}
-
+	
 	@RequestMapping(value = "/getAllPerson", method = RequestMethod.GET, produces= { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody 
 	public List<JsonObject> getAll() {
+		@SuppressWarnings("unchecked")
 		List<Person> searchedPerson = personService.getAllPerson();
+		
 		List<JsonObject> jsonObjList = getAllelements(searchedPerson);
 		return jsonObjList;
 	}
@@ -96,15 +96,14 @@ public class PersonController {
 			allPerson.add(adaptPerson(person));
 		}
 		return allPerson;
-	}
+	} 
 	
 	private JsonObject adaptPerson(Person person) {
 		JsonObject jsonObj = new JsonObject();
 		jsonObj.setIsin(person.getIsin());
-		jsonObj.setName(person.getName());
-		jsonObj.setPerformance_1yr(person.getPerformance_1yr());
-		jsonObj.setPerformance_2yr(person.getPerformance_2yr());
-		jsonObj.setPerformance_3yr(person.getPerformance_3yr());
+		jsonObj.setPersonName(person.getPersonName());
+	    jsonObj.setPerformance(person.getPersonPerf());
+		
 		return jsonObj;
 	}
 

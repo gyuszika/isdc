@@ -1,6 +1,6 @@
 function editItem() {
-    $("#myTbody td").click(function (e) {
-        e.preventDefault(); // <-- consume event
+    $("#myTbody td#editable").click(function (e) {
+    	e.preventDefault(); // <-- consume event
         e.stopImmediatePropagation();
         
         $this = $(this);
@@ -19,7 +19,7 @@ function editItem() {
         $("#myTbody .editfield").each(function(){
             $this = $(this);
             var val = $this.val();
-            var td = $this.closest('td');
+            var td = $this.closest('td#editable');
             td.empty().html(val).data('editing', false);
             
         });

@@ -1,6 +1,9 @@
 com\isdc\controller\PersonController.class
 com\isdc\model\Person.class
+com\isdc\model\PersonPerformance.class
 com\isdc\dao\PersonDao.class
+com\isdc\dao\impl\PersonPerformanceDaoImpl.class
+com\isdc\dao\PersonPerformanceDao.class
 com\isdc\service\impl\PersonServiceImpl.class
 com\isdc\dao\impl\PersonDaoImpl.class
 com\isdc\service\PersonService.class

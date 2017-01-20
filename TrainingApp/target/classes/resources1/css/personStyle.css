@@ -1,4 +1,4 @@
-input {
+myform.input {
     width: 20%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -6,6 +6,14 @@ input {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.table input{
+	padding: 2px;
+    background-color:#33ff33;
+    transition: box-shadow 0.0s, border 0.0s;
+    border: solid 1px #707070;
+  	box-shadow: 0 0 5px 1px #969696;
 }
 
 div#wholeBody {
@@ -16,11 +24,13 @@ div#wholeBody {
 	margin-right: 500px;
 	margin-left: 500px;
 	background-color: lightblue;
+	border: 4px solid black;
 }
 
 .table th{
 	text-align: center;
 }
+
 
 tr.mainTableRow {
 	border-collapse: collapse;

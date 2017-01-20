@@ -120,14 +120,15 @@ $(document).ready(function() {
 	function _createDom(data) {
 		var newRow = $("<tr class='performance"+data.isin+"'></tr>");
 		
-		newRow.append("<td><button type='button' onclick='deleteValue("+data.isin+")' > Delete </button></td></td>");
-		newRow.append("<td class ='isinNumber' onclick='editItem()'>"+data.isin+"</td>");
-		newRow.append("<td class = 'name'><input type='text' value='"+data.name+"' disabled/></td>");
-		newRow.append("<td class='perf1'>"+data.performance_1yr+"</td>");
-		newRow.append("<td class='perf2'>"+data.performance_2yr+"</td>");
-		newRow.append("<td class='perf3'>"+data.performance_3yr+"</td>");
+		newRow.append("<td><button type='button' onclick='deleteValue("+data.isin+")' > Delete </button></td>");
+		newRow.append("<td class ='isinNumber"+data.isin+"'>"+data.isin+"</td>");
+		newRow.append("<td id='editable' class ='name"+data.isin+"' onclick='editItem("+data.isin+")'>"+data.name+"</td>");
+		newRow.append("<td id='editable' class='perf1"+data.isin+"' onclick='editItem("+data.isin+")'>"+data.performance_1yr+"</td>");
+		newRow.append("<td id='editable' class='perf2"+data.isin+"' onclick='editItem("+data.isin+")'>"+data.performance_2yr+"</td>");
+		newRow.append("<td id='editable' class='perf3"+data.isin+"' onclick='editItem("+data.isin+")'>"+data.performance_3yr+"</td>");
 		newRow.append("<td class='total"+data.isin+"'></td>");
-		newRow.append("<td><button type='button' id='"+data.isin+"'> Total </button></td></td>");
+		newRow.append("<td><button type='button' id='"+data.isin+"'> Total </button></td>");
+		newRow.append("<td><button type='button' onclick='saveValue("+data.isin+")'> Save </button></td>");
 		$("#myTbody").append(newRow)
 		
 		$("#" + data.isin).click(calculate);

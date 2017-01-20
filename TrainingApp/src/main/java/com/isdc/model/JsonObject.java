@@ -1,6 +1,7 @@
 package com.isdc.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class JsonObject implements Serializable {
 	
@@ -9,10 +10,8 @@ public class JsonObject implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Long isin;
-	private String name;
-	private double performance_1yr;
-	private double performance_2yr;
-	private double performance_3yr;
+	private String personName;
+	private Set<PersonPerformance> performance;
 	
 	public long getIsin() {
 		return isin;
@@ -20,29 +19,19 @@ public class JsonObject implements Serializable {
 	public void setIsin(long i) {
 		this.isin = i;
 	}
-	public String getName() {
-		return name;
+	
+	public String getPersonName() {
+		return personName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setPersonName(String personName) {
+		this.personName = personName;
 	}
-	public double getPerformance_1yr() {
-		return performance_1yr;
+	public Set<PersonPerformance> getPerformance() {
+		return performance;
 	}
-	public void setPerformance_1yr(double performance_1yr) {
-		this.performance_1yr = performance_1yr;
+	public void setPerformance(Set<PersonPerformance> setPerformance) {
+		this.performance=setPerformance;
 	}
-	public double getPerformance_2yr() {
-		return performance_2yr;
-	}
-	public void setPerformance_2yr(double performance_2yr) {
-		this.performance_2yr = performance_2yr;
-	}
-	public double getPerformance_3yr() {
-		return performance_3yr;
-	}
-	public void setPerformance_3yr(double performance_3yr) {
-		this.performance_3yr = performance_3yr;
-	}
+
 
 }

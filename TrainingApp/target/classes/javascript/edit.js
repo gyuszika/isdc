@@ -1,45 +1,19 @@
-$(document).ready(function() {
-	function edit() {
-		var ajaxRequest;
+function saveValue(isin){
 
-		try {
-
-			ajaxRequest = new XMLHttpRequest();
-		} catch (e) {
-
-			try {
-				ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
-			} catch (e) {
-				try {
-					ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
-				} catch (e) {
-
-					alert("Your browser broke!");
-					return false;
-				}
-			}
-		}
-	}
-
-	$("#btn_edit").click(function(e) {
-		e.preventDefault();
-
-		var isin = $('#isin').val();
-		var name = $('#name').val();
-		var performance_1yr = $('#Performance Year1').val();
-		var performance_2yr = $('#Performance Year2').val();
-		var performance_3yr = $('#Performance Year3').val();
-
-		var formData = $("#form").serialize();
-
+		var isin = $('.isinNumber'+isin).text();
+		var name = $('#editable'+'.name'+isin).text();
+		var performance_1yr = $('#editable'+'.perf1'+isin).text();
+		var performance_2yr = $('#editable'+'.perf2'+isin).text();
+		var performance_3yr = $('#editable'+'.perf3'+isin).text();
 		var person = {
-			"isin" : isin,
-			"name" : name,
-			"Performance Year1" : performance_1yr,
-			"Performance Year2" : performance_2yr,
-			"Performance Year3" : performance_3yr,
+				"isin" : isin,
+				"name" : name,
+				"Performance Year1" : performance_1yr,
+				"Performance Year2" : performance_2yr,
+				"Performance Year3" : performance_3yr,
 
-		};
+			};
+		var formData = $(person).serialize();
 
 		$.ajax({
 			url : "/TrainingApp/edit",
@@ -52,10 +26,10 @@ $(document).ready(function() {
 				$('#Performance Year1').val('');
 				$('#Performance Year2').val('');
 				$('#Performance Year3').val('');
+				button.remove();
 
 			}
 
 		});
 
-	});
-});
+}

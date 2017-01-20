@@ -7,7 +7,14 @@
 <hibernate-configuration>
 
 	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+	    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/training</property>
+	    <property name="hibernate.connection.username">Juicy</property>
+	    <property name="hibernate.connection.password">1234</property>
+	    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+	    <property name="show_sql">true</property>
 		<mapping class="com.isdc.model.Person" />
+		<mapping class="com.isdc.model.PersonPerformance" />
 	</session-factory>
 
 </hibernate-configuration>

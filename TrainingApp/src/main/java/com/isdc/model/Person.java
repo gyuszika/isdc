@@ -1,51 +1,53 @@
 package com.isdc.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+/**
+ * Following class represents the Person model.
+ * 
+ * @author Robert.Szapora
+ */
 @Entity
-@Table(name = "funds")
+@Table(name = "person")
 public class Person {
+	
+	private Long isin;
+	private String personName;
+	private Set<PersonPerformance> personPerf = new HashSet<>();
+
+	public Person() {
+	}
+
+	public Person(Long isin, String personName) {
+		super();
+		this.isin = isin;
+		this.personName = personName;
+	}
+
+	public Person(Long isin, String personName, Set<PersonPerformance> personPerf) {
+		this.isin = isin;
+		this.personName = personName;
+		this.personPerf = personPerf;
+	}
 
 	@Id
 	@NotNull
-	@Column
-	private Long isin;
-	
-	@NotNull
-	@Column
-	private String name;
-
-	@Column
-	private double performance_1yr;
-	
-	@Column
-	private double performance_2yr;
-	
-	@Column
-	private double performance_3yr;
-
-	public Person() {
-
-	}
-
-	public Person(Long isin, String name, double performance_1yr, double performance_2yr,
-			double performance_3yr) {
-		super();
-		this.isin = isin;
-		this.name = name;
-		this.performance_1yr = performance_1yr;
-		this.performance_2yr = performance_2yr;
-		this.performance_3yr = performance_3yr;
-	}
-
+	@Column(name = "isin", unique = true, nullable = false, length = 13)
 	public Long getIsin() {
 		return isin;
 	}
@@ -54,44 +56,31 @@ public class Person {
 		this.isin = isin;
 	}
 
-	public String getName() {
-		return name;
+	@NotNull
+	@Column(name = "person_name")
+	public String getPersonName() {
+		return personName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setPersonName(String personName) {
+		this.personName = personName;
 	}
 
-	public double getPerformance_1yr() {
-		return performance_1yr;
+	@JsonIgnore
+	@OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@Fetch(FetchMode.JOIN)
+	@BatchSize(size = 10)
+	public Set<PersonPerformance> getPersonPerf() {
+		return this.personPerf;
 	}
 
-	public void setPerformance_1yr(double performance_1yr) {
-		this.performance_1yr = performance_1yr;
-	}
-
-	public double getPerformance_2yr() {
-		return performance_2yr;
-	}
-
-	public void setPerformance_2yr(double performance_2yr) {
-		this.performance_2yr = performance_2yr;
-	}
-
-	public double getPerformance_3yr() {
-		return performance_3yr;
-	}
-
-	public void setPerformance_3yr(double performance_3yr) {
-		this.performance_3yr = performance_3yr;
+	public void setPersonPerf(Set<PersonPerformance> personPerf) {
+		this.personPerf = personPerf;
 	}
 
 	@Override
 	public String toString() {
-		return "Person [isin=" + isin + ", name=" + name + ", performance_1yr=" + performance_1yr
-				+ ", performance_2yr=" + performance_2yr + ", performance_3yr=" + performance_3yr + "]";
+		return "Person [isin=" + isin + ", personName=" + personName + "]";
 	}
-
-	
 
 }

@@ -1,56 +1,25 @@
-var app = angular.module("myApp", ['ngRoute','ngMaterial', 'ngMessages'])
-.config(function($anchorScrollProvider) {
-  	
-    $anchorScrollProvider.disableAutoScrolling();
-  })
+var app = angular.module("myApp", ['ngRoute','ngMaterial', 'ngMessages', 'angular.filter'])
 
-.directive('myPerson', function() {
-  return {
-	  restrict: 'E',
-	  scope: {
-	      personInfo: '=info'
-	    },
-    templateUrl: '/TrainingApp/resources1/html/editableContent.html'
-  };
-})
-	
-.directive('myCurrentTime', ['$interval', 'dateFilter', function($interval, dateFilter) {
+var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 
-    function link(scope, element, attrs) {
-    	
-    	
-    	var timeFormat, timeoutId;
-
-      function updateTime() {
-        element.text(dateFilter(new Date(), timeFormat));
-      }
-
-      scope.$watch(attrs.myCurrentTime, function(value) {
-        timeFormat = value;
-        updateTime();
-      });
-
-      element.on('$destroy', function() {
-        $interval.cancel(timeoutId);
-      });
-
-      // start the UI update process; save the timeoutId for canceling
-      timeoutId = $interval(function() {
-        updateTime(); // update DOM
-      }, 1000);
-    }
-
-    return {
-      link: link
-    };
-  }]);
-
-var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
-	
 	$scope.timeFormat = 'MM/d/yyyy h:mm:ss a';
+	
+	var initial = {text: 'initial value'};
+    $scope.myModel = angular.copy(initial);
+    $scope.revert = function() {
+        $scope.isin = angular.copy(initial);
+        $scope.myForm.$setPristine();
+    }
 	
 	var onUserComplete = function(response) {
 		$scope.persons = response.data;
+		
+		angular.forEach($scope.persons, function(person) {
+			person.perfTotal = 0;
+			for (var int = 0; int < person.performance.length; int++) {
+				person.perfTotal += person.performance[int].performance;
+			}
+		})
 	};
 	
 	var result=function(person){
@@ -72,19 +41,13 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
 		//created variable to be parsed to controller as a string
 		var person = $.param({
 			isin : $scope.isin,
-			name : $scope.name,
-			performance_1yr : $scope.performance_1yr,
-			performance_2yr : $scope.performance_2yr,
-			performance_3yr : $scope.performance_3yr
+			personName : $scope.personName
 		});
 		
 		//current variable creates the Object
 		var personToAdd = {
 			isin : $scope.isin,
-			name : $scope.name,
-			performance_1yr : $scope.performance_1yr,
-			performance_2yr : $scope.performance_2yr,
-			performance_3yr : $scope.performance_3yr
+			personName : $scope.personName
 		};
 		
 		var config = {
@@ -93,24 +56,24 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
                 }
         };
 		$http.post("/TrainingApp/add", person, config);
-		$scope.persons.push(personToAdd);
+		
+		//on click empties inputs from form
+		 $scope.isin = null;
+		 $scope.personName = null;
+		
+		 $scope.myForm.$setUntouched();
+		
+		 $scope.persons.push(personToAdd);
 		
 		//on click (Add) button it hides input form
 		$scope.addNewPerson = false;
         $scope.toggleAddNew = function() {
         $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
         
-         //on click empties inputs from form
-		 $scope.isin = null;
-		 $scope.name = null;
-		 $scope.performance_1yr = null;
-		 $scope.performance_2yr = null;
-		 $scope.performance_3yr = null;
         };
         
 	};
 	
-		
 		  //select/unselect all rows from table
 		  $scope.checkAll = function () {
 		        if ($scope.selectedAll) {
@@ -132,9 +95,10 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
 	     
 	        //toggle between show/hide table
 	        $scope.personsTable = true;
-	        $scope.toggleHideList = function() {
-	        $scope.personsTable = $scope.personsTable === false ? true: false;
+	        $scope.toggleHideList = function () {
+	        	$scope.personsTable = !$scope.personsTable;
 	        };
+
 	        
 	        //Confirmation box before deleting
 	        $scope.showDeleteConfirm = function(ev) {
@@ -164,10 +128,22 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
           	//delete selected row/rows
 	        var deleteSelected = function() {
       		var data = $scope.persons;
+      		var uniqueData = {};
       		var selectedObject = [];
       		
+      	for(var i = 0; i< data.length; i++){
+      		var currentIsin = data[i].isin;
+      		if (uniqueData[currentIsin]) {
+      			uniqueData[currentIsin].performance.push(data[i].performance);
+      			continue;
+      		}
+      		uniqueData[currentIsin] = data[i];
+      		uniqueData[currentIsin].performanceArray = [data[i].performance];
+      	}
+
+      		
       		//iterates list and deletes selected objects, dynamically replaces list with remaining Objects
-      		angular.forEach(data, function(value, index) {
+      		angular.forEach(uniqueData, function(value, index) {
       			if (!value.checked) {
       				selectedObject.push(value);
       			} else {
@@ -175,7 +151,7 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
       			}
       			;
       		});
-      			$scope.persons = selectedObject;
+      			uniqueData = selectedObject;
       		};
 	          
 	          function DialogController($scope, $mdDialog) {
@@ -202,10 +178,7 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
 	        	 
 	        	  var personToEdit = $.param({
 	      			isin : person.isin,
-	      			name : person.name,
-	      			performance_1yr : person.performance_1yr,
-	      			performance_2yr : person.performance_2yr,
-	      			performance_3yr : person.performance_3yr
+	      			personName : person.personName,
 	      		});
 	      		
 	      		var config = {
@@ -216,5 +189,63 @@ var getAllPersonCtrl = function($scope, $http, $q, $mdDialog) {
 	      		$http.post("/TrainingApp/edit", personToEdit, config);
 	
 	          };
+	          
+	          $scope.getAll();
 };
-app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScroll",  getAllPersonCtrl ]);
+
+app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScroll", getAllPersonCtrl])
+
+.directive('myCurrentTime', ['$interval', 'dateFilter', function($interval, dateFilter) {
+
+    function link(scope, element, attrs) {
+    	
+    	var timeFormat, timeoutId;
+
+      function updateTime() {
+        element.text(dateFilter(new Date(), timeFormat));
+      }
+
+      scope.$watch(attrs.myCurrentTime, function(value) {
+        timeFormat = value;
+        updateTime();
+      });
+
+      element.on('$destroy', function() {
+        $interval.cancel(timeoutId);
+      });
+
+      // start the UI update process; save the timeoutId for canceling
+      timeoutId = $interval(function() {
+        updateTime(); // update DOM
+      }, 1000);
+    }
+
+    return {
+      link: link
+    };
+  }])
+ .directive('confirmOnExit', function() {
+        return {
+            link: function($scope, elem, attrs) {
+                window.onbeforeunload = function(){
+                    if ($scope.myForm.$dirty) {
+                        return "The form is dirty, do you want to stay on the page?";
+                    }
+                }
+                $scope.$on('$locationChangeStart', function(event, next, current) {
+                    if ($scope.myForm.$dirty) {
+                        if(!confirm("The form is dirty, do you want to stay on the page?")) {
+                            event.preventDefault();
+                        }
+                    }
+                });
+            }
+        };
+    })
+
+.config(function($anchorScrollProvider) {
+  	
+    $anchorScrollProvider.disableAutoScrolling();
+  });
+  
+  

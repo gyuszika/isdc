@@ -1,7 +1,11 @@
 package com.isdc.dao.impl;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,7 +41,7 @@ public class PersonDaoImpl implements PersonDao {
 
 	@Override
 	public List getAllPerson() {
-		return session.getCurrentSession().createCriteria(Person.class).list();
+		return session.getCurrentSession().createCriteria(Person.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 	}
 
 }

@@ -21,47 +21,29 @@
 	<h2>Table Contents</h2>
 	 
 	 <md-button ng-click="toggleAddNew()" class="md-primary md-raised">Add new person</md-button> 
-	 <md-button class="md-primary md-raised" ng-model="persons"  ng-click="toggleHideList(); getAll()">Get complete list</md-button> 
+	 <md-button class="md-primary md-raised" ng-model="persons"  ng-click="toggleHideList()">Get complete list</md-button> 
 	
 	<div ng-hide="addNewPerson">
 		
 		<h3>Person Data</h3>
 		<div>
-		<form name="myForm" id="form" >
-						
-						
-						<label for="isin">Isin</label>
-						<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> is required &</font></span>
-						<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> Should contain 13 numbers!</font></span>
-						<div >
-							<input class="form-control" style="width: 30%; margin: 0 auto" id="isin" type="text" name="isin" ng-minlength="13" ng-model="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
-						</div>
-
-						<label for="name">Name</label>
-						<span ng-show="myForm.name.$touched && myForm.name.$invalid"><font color="red"> is required!</font></span>
-						<div>
-							<input class="form-control" style="width: 30%; margin: 0 auto" id="name" type="text" name="name" ng-model="name" required/>
-						</div>
-
-						<label for="perf1">1<sup>st</sup> Year's Performance</label>
-						<div>
-						<input class="form-control" style="width: 30%; margin: 0 auto" id="perf1" type="number" name="performance_1yr" ng-model="performance_1yr" step="any" />
-						</div>
-
-						
-						<label for="perf2">2<sup>nd</sup> Year's Performance</label>
-						<div>
-						<input class="form-control" style="width: 30%; margin: 0 auto" id="perf2" type="number" name="performance_2yr" ng-model="performance_2yr" step="any" />
-						</div>
-
-						<label for="perf3">3<sup>rd</sup> Year's Performance</label>
-						<div>
-						<input class="form-control" style="width: 30%; margin: 0 auto" id="perf3" type="number" name="performance_3yr" ng-model="performance_3yr" step="any" />
-						</div>
-						
-						<div><md-button ng-disabled="myForm.isin.$invalid || myForm.name.$invalid" class="md-primary md-raised" ng-click="add(); toggleAddNew()" >Add</md-button></div>
-				
-		</form>
+			<form name="myForm" id="form" confirm-on-exit>
+							
+							<label for="isin">Isin</label>
+							<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> is required &</font></span>
+							<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> Should contain 13 numbers!</font></span>
+								<div >
+									<input class="form-control" style="width: 30%; margin: 0 auto" id="isin" type="text" name="isin" ng-minlength="13" ng-model="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
+								</div>
+							<label for="personName">Name</label>
+							<span ng-show="myForm.personName.$touched && myForm.personName.$invalid"><font color="red"> is required!</font></span>
+								<div>
+									<input class="form-control" style="width: 30%; margin: 0 auto" id="personName" type="text" name="personName" ng-model="personName" required/>
+								</div>
+	
+							<div><md-button ng-disabled="myForm.isin.$invalid || myForm.personName.$invalid" class="md-primary md-raised" ng-click="add(); toggleAddNew()" >Add</md-button></div>
+					
+			</form>
 		</div>
 	</div>
 
@@ -71,7 +53,7 @@
 
 		<div><font color="red"><b>{{error}}</b></font></div>
 
-	<div ng-hide="personsTable">
+	<div ng-show="personsTable">
 		
 			<div>
 					<h4>Person List</h4> 
@@ -89,70 +71,34 @@
 						<td><b>Isin</b></td>
 						
 						<td>
-							<a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+							<a href="#" ng-click="sortType = 'personName'; sortReverse = !sortReverse">
 							<b>Name</b>
-							<span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
-           					<span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+							<span ng-show="sortType == 'personName' && !sortReverse" class="fa fa-caret-down"></span>
+           					<span ng-show="sortType == 'personName' && sortReverse" class="fa fa-caret-up"></span>
 							</a>
 						</td>
 						
 						<td>
-							<a href="#" ng-click="sortType = 'performance_1yr'; sortReverse = !sortReverse">
-							<b>Perf. 1st Year</b>
-							<span ng-show="sortType == 'performance_1yr' && !sortReverse" class="fa fa-caret-down"></span> 
-							<span ng-show="sortType == 'performance_1yr' && sortReverse" class="fa fa-caret-up"></span>
-							</a>
-						</td>
-						
-						<td>
-							<a href="#" ng-click="sortType = 'performance_2yr'; sortReverse = !sortReverse">
-							<b>Perf. 2nd Year</b>
-							<span ng-show="sortType == 'performance_2yr' && !sortReverse" class="fa fa-caret-down"></span> 
-							<span ng-show="sortType == 'performance_2yr' && sortReverse" class="fa fa-caret-up"></span>
-							</a>
-						</td>
-						
-						<td>
-							<a href="#" ng-click="sortType = 'performance_3yr'; sortReverse = !sortReverse">
-							<b>Perf. 3rd Year</b>
-							<span ng-show="sortType == 'performance_3yr' && !sortReverse" class="fa fa-caret-down"></span> 
-							<span ng-show="sortType == 'performance_3yr' && sortReverse" class="fa fa-caret-up"></span>
-							</a>
-						</td>
-						
-						<td>
-							<a href="#" ng-click="sortType = 'total'; sortReverse = !sortReverse">
+							<a href="#" ng-click="sortType = 'perfTotal'; sortReverse = !sortReverse">
 							<b>Total</b>
-							<span ng-show="sortType == 'total' && !sortReverse" class="fa fa-caret-down"></span> 
-							<span ng-show="sortType == 'total' && sortReverse" class="fa fa-caret-up"></span>
+							<span ng-show="sortType == 'perfTotal' && !sortReverse" class="fa fa-caret-down"></span> 
+							<span ng-show="sortType == 'perfTotal' && sortReverse" class="fa fa-caret-up"></span>
 							</a>
 						</td>
 					</tr>
 				</thead>
 				
 			<tbody>
-				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText">
+				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText | unique:'isin'" ng-click="detailedInfo(person)">
 					<td><input type="checkbox" ng-model="person.checked" /></td>
 					
 					<td><i>{{person.isin}}</td>
 					
-					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.name}}</b></span>
-						<input ng-show="person.editing" ng-model="person.name" ng-blur="doneEditing(person)" autofocus size="6" />
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.personName}}</b></span>
+						<input ng-show="person.editing" ng-model="person.personName" ng-blur="doneEditing(person)" autofocus size="6" />
 					</td>
 					
-					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.performance_1yr | number}}</b></span>
-               		 	<input type="text" ng-show="person.editing" ng-model="person.performance_1yr" ng-blur="doneEditing(person)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'  autofocus size="6"/>
-					</td>
-					
-					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.performance_2yr | number}}</b></span>
-               		 	<input type="text" ng-show="person.editing" ng-model="person.performance_2yr" ng-blur="doneEditing(person)" onkeypress='return event.charCode >= 48 && event.charCode <= 57' autofocus size="6"/>
-					</td>
-					
-					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.performance_3yr | number}}</b></span>
-               		 	<input type="text" ng-show="person.editing" ng-model="person.performance_3yr" ng-blur="doneEditing(person)" onkeypress='return event.charCode >= 48 && event.charCode <= 57' autofocus size="6"/>
-					</td>
-					
-					<td ng-init="person.total = person.performance_1yr + person.performance_2yr + person.performance_3yr"><b>{{person.total | number}}</b></td>
+					<td ng-model="person.perfTotal">{{person.perfTotal | number : 2}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -167,6 +113,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
