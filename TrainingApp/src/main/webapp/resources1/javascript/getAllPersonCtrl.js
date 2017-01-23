@@ -146,9 +146,19 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
       		$scope.detailedInfo = function(person){
       	        console.log(person);
       		   };
-	          
-	          
-      		   function DialogController($scope, $mdDialog) {
+
+			var personDetailModel = function() {
+				this.visible = false;
+			};
+			personDetailModel.prototype.open = function(person) {
+				this.person = person;
+				this.visible = true;
+			};
+			personDetailModel.prototype.close = function() {
+				this.visible = false;
+			};
+			
+      		 function DialogController($scope, $mdDialog) {
 	        	    $scope.hide = function() {
 	        	      $mdDialog.hide();
 	        	    };
@@ -183,12 +193,17 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 	      		$http.post("/TrainingApp/edit", personToEdit, config);
 	
 	          };
-	          
+	        
+	          $scope.personDetailView = new personDetailModel(); 
+	         
 	          $scope.getAll();
+	          
+	          
 };
 
 app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScroll", getAllPersonCtrl])
 
+//following directive shows live date/time on front page
 .directive('myCurrentTime', ['$interval', 'dateFilter', function($interval, dateFilter) {
 
     function link(scope, element, attrs) {
@@ -218,7 +233,81 @@ app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScrol
       link: link
     };
   }])
- .directive('confirmOnExit', function() {
+
+  //Following directive opens a table view of selected persons's row, showing details
+.directive('personDetail', [function() {
+  return {
+    restrict: 'E',
+    scope: {
+      model: '=',
+    },
+    link: function(scope, element, attributes) {
+      
+    	scope.personChart = false;
+    	
+    	scope.$watch('model.visible', function(newValue) {
+        var modalElement = element.find('.modal');
+        modalElement.modal(newValue ? 'show' : 'hide');
+      });
+      
+      scope.showChart = function(){
+    	  scope.personChart = !scope.personChart;
+    	  
+    	  var personToCheck=scope.model.person.performance;
+    	  var performanceYears = [];
+    	  var performances = [];
+    	  
+          angular.forEach(personToCheck, function(value, key){
+        	  performanceYears.push(value.performanceYear);
+        	  performances.push(value.performance);
+        	  
+          })
+          
+          var years=[];
+          for(var x=0; x<=performanceYears.length; x++){
+        	  years.push(performanceYears[x].toString())
+          }
+          
+          console.log(years);
+          console.log(performances);
+          
+        	  
+      };
+      
+      
+      element.on('shown.bs.modal', function() {
+        scope.$apply(function() {
+          scope.model.visible = true;
+        });
+      });
+
+      element.on('hidden.bs.modal', function() {
+        scope.$apply(function() {
+          scope.model.visible = false;
+        });
+      });
+      
+      Highcharts.chart('performanceChart', {
+          title: {
+            text: 'Performance Data'
+          },
+
+          xAxis: {
+            categories: [scope.performanceYears]
+          },
+
+          series: [{
+            data: [scope.performances]
+          }]
+        });
+      
+    },
+    templateUrl: '/TrainingApp/resources1/html/personDetails.html',
+  };
+}])
+
+//following directive, opens alert box if form is left dirty and there are unsaved datas
+.directive('confirmOnExit', function() {
         return {
             link: function($scope, elem, attrs) {
                 window.onbeforeunload = function(){

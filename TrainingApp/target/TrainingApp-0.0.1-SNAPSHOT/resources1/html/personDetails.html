@@ -1,0 +1,59 @@
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title">Person Details</h4>
+        
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <h4><b><i><u>{{model.person.personName}}</u></i></b></h4>
+          <b style="float:centre">{{model.person.isin}}</b>
+          <br>
+           <a href="" style="float:right" ng-click="personChartView.open(person)">View Chart</a>
+        
+          <table ng-hide="personChart" class="table table-condensed">
+	          <thead>
+		          <tr>
+			         	<td>
+							<a href="#" ng-click="sortType = 'performanceYear'; sortReverse = !sortReverse">
+							<b>Year</b>
+							<span ng-show="sortType == 'performanceYear' && !sortReverse" class="fa fa-caret-down"></span>
+           					<span ng-show="sortType == 'performanceYear' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
+						
+			          <td>
+							<a href="#" ng-click="sortType = 'performance'; sortReverse = !sortReverse">
+							<b>Performance</b>
+							<span ng-show="sortType == 'performance' && !sortReverse" class="fa fa-caret-down"></span> 
+							<span ng-show="sortType == 'performance' && sortReverse" class="fa fa-caret-up"></span>
+							</a>
+						</td>
+		          </tr>
+	          </thead>
+          <tbody>
+	          <tr ng-repeat="x in model.person.performance | orderBy: sortType:sortReverse">
+	          	<td>{{x.performanceYear}}</td>
+	          	<td>{{x.performance}}</td>
+	          </tr>
+          </tbody>
+          </table>
+         
+          <label>Total Performance:</label>
+	      {{model.person.perfTotal | number : 2}}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

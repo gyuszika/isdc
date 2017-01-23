@@ -11,9 +11,10 @@
 </head>
 <link rel="stylesheet" type="text/css" href="/TrainingApp/resources1/css/personStyle.css">
 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-<link rel="stylesheet prefetch" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
 <body >
 <div id="wholeBody" ng-controller="getAllPersonCtrl">
@@ -89,7 +90,7 @@
 				</thead>
 				
 			<tbody>
-				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText | unique:'isin'" ng-click="detailedInfo(person)">
+				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText | unique:'isin'" ng-dblclick="personDetailView.open(person)">
 					<td><input type="checkbox" ng-model="person.checked" /></td>
 					
 					<td><i>{{person.isin}}</td>
@@ -102,11 +103,14 @@
 				</tr>
 			</tbody>
 		</table>
-			
+		<person-detail model="personDetailView"></person-detail>
 		</div>
-		</div>
+	</div>
 </body>
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>  -->
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
@@ -114,7 +118,6 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/TrainingApp/resources1/javascript/getAllPersonCtrl.js"></script>
 </html>

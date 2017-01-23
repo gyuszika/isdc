@@ -128,22 +128,10 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
           	//delete selected row/rows
 	        var deleteSelected = function() {
       		var data = $scope.persons;
-      		var uniqueData = {};
       		var selectedObject = [];
       		
-      	for(var i = 0; i< data.length; i++){
-      		var currentIsin = data[i].isin;
-      		if (uniqueData[currentIsin]) {
-      			uniqueData[currentIsin].performance.push(data[i].performance);
-      			continue;
-      		}
-      		uniqueData[currentIsin] = data[i];
-      		uniqueData[currentIsin].performanceArray = [data[i].performance];
-      	}
-
-      		
       		//iterates list and deletes selected objects, dynamically replaces list with remaining Objects
-      		angular.forEach(uniqueData, function(value, index) {
+      		angular.forEach(data, function(value, index) {
       			if (!value.checked) {
       				selectedObject.push(value);
       			} else {
@@ -151,10 +139,26 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
       			}
       			;
       		});
-      			uniqueData = selectedObject;
+      			$scope.persons = selectedObject;
       		};
-	          
-	          function DialogController($scope, $mdDialog) {
+      		
+      		 //Clickable row
+      		$scope.detailedInfo = function(person){
+      	        console.log(person);
+      		   };
+
+			var personDetailModel = function() {
+				this.visible = false;
+			};
+			personDetailModel.prototype.open = function(person) {
+				this.person = person;
+				this.visible = true;
+			};
+			personDetailModel.prototype.close = function() {
+				this.visible = false;
+			};
+			
+      		 function DialogController($scope, $mdDialog) {
 	        	    $scope.hide = function() {
 	        	      $mdDialog.hide();
 	        	    };
@@ -189,12 +193,17 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 	      		$http.post("/TrainingApp/edit", personToEdit, config);
 	
 	          };
-	          
+	        
+	          $scope.personDetailView = new personDetailModel(); 
+	         
 	          $scope.getAll();
+	          
+	          
 };
 
 app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScroll", getAllPersonCtrl])
 
+//following directive shows live date/time on front page
 .directive('myCurrentTime', ['$interval', 'dateFilter', function($interval, dateFilter) {
 
     function link(scope, element, attrs) {
@@ -224,7 +233,39 @@ app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScrol
       link: link
     };
   }])
- .directive('confirmOnExit', function() {
+
+  //Following directive opens a table view of selected persons's row, showing details
+.directive('personDetail', [function() {
+  return {
+    restrict: 'E',
+    scope: {
+      model: '=',
+    },
+    link: function(scope, element, attributes) {
+      scope.$watch('model.visible', function(newValue) {
+        var modalElement = element.find('.modal');
+        modalElement.modal(newValue ? 'show' : 'hide');
+      });
+      
+      element.on('shown.bs.modal', function() {
+        scope.$apply(function() {
+          scope.model.visible = true;
+        });
+      });
+
+      element.on('hidden.bs.modal', function() {
+        scope.$apply(function() {
+          scope.model.visible = false;
+        });
+      });
+      
+    },
+    templateUrl: '/TrainingApp/resources1/html/personDetails.html',
+  };
+}])
+
+//following directive, opens alert box if form is left dirty and there are unsaved datas
+.directive('confirmOnExit', function() {
         return {
             link: function($scope, elem, attrs) {
                 window.onbeforeunload = function(){

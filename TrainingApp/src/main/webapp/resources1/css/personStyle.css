@@ -38,3 +38,7 @@ tr.mainTableRow {
 	background-color: orange;
 }
 
+div#performanceChart {
+  width: 100%
+}
+
