@@ -18,6 +18,7 @@
 
 <body >
 <div id="wholeBody" ng-controller="getAllPersonCtrl">
+	
 	<p align="right"><b>Time:</b> <span my-current-time="timeFormat"></span>&nbsp;&nbsp;</p>
 	<h2>Table Contents</h2>
 	 
@@ -54,7 +55,7 @@
 
 		<div><font color="red"><b>{{error}}</b></font></div>
 
-	<div ng-show="personsTable">
+	<div ng-controller="ModalDemoCtrl " class="modal-demo" ng-show="personsTable">
 		
 			<div>
 					<h4>Person List</h4> 
@@ -62,8 +63,12 @@
 					<md-button class="md-primary md-raised" ng-click="toggleHideList()">Hide List</md-button>
 					<input class="form-control input-sm" style="width: 25%; margin: 0 auto" placeholder="Search person..." ng-model="searchText">
 			</div>
+					<small style="float: right">*double-click on <u>person name</u> to edit field</small> 
+					<br>
+					<small style="float: right">*double-click on desired row to see performance details</small> 
+					<br> 
+					<small style="float: right">*click on <u>check-box</u> to delete desired row/s</small> 
 <p></p>
-		
 		<table name="myTable" ng-model="myTable" class="table table-hover" >
 				<thead>
 					<tr class="mainTableRow">
@@ -90,12 +95,12 @@
 				</thead>
 				
 			<tbody>
-				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText | unique:'isin'" ng-dblclick="personDetailView.open(person)">
+				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText | unique:'isin'" ng-dblclick="open(person, $event)">
 					<td><input type="checkbox" ng-model="person.checked" /></td>
 					
 					<td><i>{{person.isin}}</td>
 					
-					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b>{{person.personName}}</b></span>
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b data-is-name="true">{{person.personName}}</b></span>
 						<input ng-show="person.editing" ng-model="person.personName" ng-blur="doneEditing(person)" autofocus size="6" />
 					</td>
 					
@@ -103,8 +108,6 @@
 				</tr>
 			</tbody>
 		</table>
-		<person-detail model="personDetailView"></person-detail>
-		</div>
 	</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -114,6 +117,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.4.0.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>

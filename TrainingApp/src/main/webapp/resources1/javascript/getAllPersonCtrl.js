@@ -1,4 +1,4 @@
-var app = angular.module("myApp", ['ngRoute','ngMaterial', 'ngMessages', 'angular.filter'])
+var app = angular.module("myApp", ['ngRoute','ngMaterial', 'ngMessages', 'angular.filter', 'ui.bootstrap'])
 
 var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 
@@ -106,7 +106,6 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 	            var confirm = $mdDialog.confirm()
 	                  .title('Are you sure you want to delete selected item/s?')
 	                  .textContent('These data will be lost forever.')
-	                  .ariaLabel('Lucky day')
 	                  .targetEvent(ev)
 	                  .ok('Delete')
 	                  .cancel('Cancel');
@@ -141,69 +140,35 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
       		});
       			$scope.persons = selectedObject;
       		};
-      		
-      		 //Clickable row
-      		$scope.detailedInfo = function(person){
-      	        console.log(person);
-      		   };
+      	   
 
-			var personDetailModel = function() {
-				this.visible = false;
-			};
-			personDetailModel.prototype.open = function(person) {
-				this.person = person;
-				this.visible = true;
-			};
-			personDetailModel.prototype.close = function() {
-				this.visible = false;
-			};
-			
-      		 function DialogController($scope, $mdDialog) {
-	        	    $scope.hide = function() {
-	        	      $mdDialog.hide();
-	        	    };
+	// Edit person name on double-click
+	$scope.editItem = function(person) {
+		person.editing = true;
+	}
 
-	        	    $scope.cancel = function() {
-	        	      $mdDialog.cancel();
-	        	    };
+	$scope.doneEditing = function(person) {
+		person.editing = false;
 
-	        	    $scope.answer = function(answer) {
-	        	      $mdDialog.hide(answer);
-	        	    };
-	        	  }
+		var personToEdit = $.param({
+			isin : person.isin,
+			personName : person.personName,
+		});
 
-	          
-	          $scope.editItem = function (person) {
-	        	  person.editing = true;
-	          }
+		var config = {
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8;'
+			}
+		};
+		$http.post("/TrainingApp/edit", personToEdit, config);
 
-	          $scope.doneEditing = function (person) {
-	        	  person.editing = false;
-	        	 
-	        	  var personToEdit = $.param({
-	      			isin : person.isin,
-	      			personName : person.personName,
-	      		});
-	      		
-	      		var config = {
-	                      headers : {
-	                          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-	                      }
-	              };
-	      		$http.post("/TrainingApp/edit", personToEdit, config);
-	
-	          };
-	        
-	          $scope.personDetailView = new personDetailModel(); 
-	         
-	          $scope.getAll();
-	          
+	};
 	          
 };
 
-app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScroll", getAllPersonCtrl])
+app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScroll", getAllPersonCtrl])
 
-//following directive shows live date/time on front page
+// following directive shows live date/time on front page
 .directive('myCurrentTime', ['$interval', 'dateFilter', function($interval, dateFilter) {
 
     function link(scope, element, attrs) {
@@ -234,78 +199,6 @@ app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScrol
     };
   }])
 
-  //Following directive opens a table view of selected persons's row, showing details
-.directive('personDetail', [function() {
-  return {
-    restrict: 'E',
-    scope: {
-      model: '=',
-    },
-    link: function(scope, element, attributes) {
-      
-    	scope.personChart = false;
-    	
-    	scope.$watch('model.visible', function(newValue) {
-        var modalElement = element.find('.modal');
-        modalElement.modal(newValue ? 'show' : 'hide');
-      });
-      
-      scope.showChart = function(){
-    	  scope.personChart = !scope.personChart;
-    	  
-    	  var personToCheck=scope.model.person.performance;
-    	  var performanceYears = [];
-    	  var performances = [];
-    	  
-          angular.forEach(personToCheck, function(value, key){
-        	  performanceYears.push(value.performanceYear);
-        	  performances.push(value.performance);
-        	  
-          })
-          
-          var years=[];
-          for(var x=0; x<=performanceYears.length; x++){
-        	  years.push(performanceYears[x].toString())
-          }
-          
-          console.log(years);
-          console.log(performances);
-          
-        	  
-      };
-      
-      
-      element.on('shown.bs.modal', function() {
-        scope.$apply(function() {
-          scope.model.visible = true;
-        });
-      });
-
-      element.on('hidden.bs.modal', function() {
-        scope.$apply(function() {
-          scope.model.visible = false;
-        });
-      });
-      
-      Highcharts.chart('performanceChart', {
-          title: {
-            text: 'Performance Data'
-          },
-
-          xAxis: {
-            categories: [scope.performanceYears]
-          },
-
-          series: [{
-            data: [scope.performances]
-          }]
-        });
-      
-    },
-    templateUrl: '/TrainingApp/resources1/html/personDetails.html',
-  };
-}])
-
 //following directive, opens alert box if form is left dirty and there are unsaved datas
 .directive('confirmOnExit', function() {
         return {
@@ -329,6 +222,83 @@ app.controller("getAllPersonCtrl", [ "$scope", "$http","$mdDialog","$anchorScrol
 .config(function($anchorScrollProvider) {
   	
     $anchorScrollProvider.disableAutoScrolling();
-  });
+  })
+ 
+  //Following controller is a modal for person detailed information regarding it's performance
+.controller('ModalDemoCtrl', function ($scope, $uibModal, $http, $log, $document) {
+  
+	 $scope.getAll();
+	 $scope.data = $scope.persons;
+	 $scope.animationsEnabled = true;
+
+	 $scope.open = function(person, $event) {
+		 
+		 if($($event.target).data('isName')) {
+			 return;
+		 }
+		 
+		var modalInstance = $uibModal.open({
+			animation : $scope.animationsEnabled,
+			ariaLabelledBy : 'modal-title',
+			ariaDescribedBy : 'modal-body',
+			templateUrl : '/TrainingApp/resources1/html/personDetail.html',
+			controller : 'ModalInstanceCtrl',
+			size : 'lg',
+			resolve : {
+				data : function() {
+					return person;
+				}
+			}
+		});
+		
+		
+	};
+
+  $scope.toggleAnimation = function () {
+    $scope.animationsEnabled = !$scope.animationsEnabled;
+  };
+  
+})
+
+.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, $filter, data) {
+  $scope.person = data;
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+  
+  //Followinf function changes modal table to chart view
+  $scope.showChart = function(){
+ 	  $scope.personChart = !$scope.personChart;
+ 	  
+ 	  var personToCheck=$scope.person.performance;
+ 	  var performanceYears = [];
+ 	  var performances = [];
+ 	  
+ 	 personToCheck= $filter('orderBy')(personToCheck, 'performanceYear');
+ 	  
+       angular.forEach(personToCheck, function(value, key){
+     	  performanceYears.push(value.performanceYear+'');
+     	  performances.push(value.performance);
+     	  
+       });
+       
+       Highcharts.chart('performanceChart', {
+           title: {
+             text: 'Performance Data'
+           },
+
+           xAxis: {
+             categories: performanceYears
+           },
+
+           series: [{
+             data: performances
+           }]
+         });
+   };
+
+});
+
   
   
