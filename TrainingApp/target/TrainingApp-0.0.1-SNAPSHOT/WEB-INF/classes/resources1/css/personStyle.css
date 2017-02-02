@@ -1,11 +1,12 @@
-myform.input {
-    width: 20%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+input{
+	text-align: center;
+}
+.new-person{
+	background-color:#98ebfc;
+	border: 2px solid #178bb7;
+    border-radius: 5px;
+    width: 50%;
+    margin: auto;
 }
 
 .table input{
@@ -19,11 +20,9 @@ myform.input {
 div#wholeBody {
 	border-radius: 25px;
 	text-align: center;
-/* 	margin-top: 100px; */
-/* 	margin-bottom: 100px; */
 	margin-right: 500px;
 	margin-left: 500px;
-	background-color: lightblue;
+	background-color: #64e3ff;
 	border: 4px solid black;
 }
 
@@ -39,3 +38,79 @@ tr.mainTableRow {
 }
 
 
+@media print{
+    .non-printable { display: none; }
+}
+
+.custom-class{
+  background-color: #44cc00
+}
+
+.default-color{
+  background-color: #00b8e6
+}
+
+.warning-color{
+	background-color: #ff6600
+}
+
+.modal-dialog {
+    width: 400px;
+}
+
+table.table-bordered {
+	text-align: center;
+	width: 80%; 
+	margin:0 auto;
+}
+
+#modalLabel{
+	 	display: block;
+	    text-align: center;
+	    line-height: 150%;
+}
+
+#progressDiv{
+	text-align: center;
+	width: 80%; 
+	margin:0 auto;
+}
+
+#performance-chart {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 800px;
+  margin:0 auto;
+}
+
+#performance-pie {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 800px;
+  margin:0 auto;
+}
+
+.person-info{
+	display:inline-block;
+    float: left;
+    margin: 0 1% 1% 0;
+}
+
+.table-handle{
+	display:inline-block;
+	 margin: 0 1% 1% 0;
+}
+
+.table-info{
+	 float: right;
+	 margin: 0 1% 1% 0;
+}
+
+.person-handle{
+	 margin: 0 auto;
+}
+
+.glyphicon-info-sign{
+	float: right;
+	margin: 10px;
+}

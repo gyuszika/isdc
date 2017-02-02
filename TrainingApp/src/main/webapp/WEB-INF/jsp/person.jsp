@@ -17,36 +17,53 @@
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
 <body >
-<div id="wholeBody" ng-controller="getAllPersonCtrl">
+<div id="wholeBody" ng-controller="getAllPersonCtrl" class="non-printable" >
 	
 	<p align="right"><b>Time:</b> <span my-current-time="timeFormat"></span>&nbsp;&nbsp;</p>
 	<h2>Table Contents</h2>
 	 
-	 <md-button ng-click="toggleAddNew()" class="md-primary md-raised">Add new person</md-button> 
-	 <md-button class="md-primary md-raised" ng-model="persons"  ng-click="toggleHideList()">Get complete list</md-button> 
+	 <button class="btn btn-success" ng-click="toggleAddNew()" class="md-primary md-raised">Add person <span class="glyphicon glyphicon-plus"></span></button> 
+	
+				<button class="btn btn-info" ng-model="persons"  ng-click="toggleHideList()" ng-if="!myTable"> <span class="glyphicon glyphicon-eye-open"></span> Toggle Table</button> 
+<br>
+<br>
 	
 	<div ng-hide="addNewPerson">
 		
-		<h3>Person Data</h3>
-		<div>
 			<form name="myForm" id="form" confirm-on-exit>
+						<div class="new-person" >
 							
-							<label for="isin">Isin</label>
-							<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> is required &</font></span>
-							<span ng-if="myForm.isin.$touched && myForm.isin.$invalid"><font color="red"> Should contain 13 numbers!</font></span>
-								<div >
-									<input class="form-control" style="width: 30%; margin: 0 auto" id="isin" type="text" name="isin" ng-minlength="13" ng-model="isin" maxlength="13" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required/>
-								</div>
-							<label for="personName">Name</label>
-							<span ng-show="myForm.personName.$touched && myForm.personName.$invalid"><font color="red"> is required!</font></span>
-								<div>
-									<input class="form-control" style="width: 30%; margin: 0 auto" id="personName" type="text" name="personName" ng-model="personName" required/>
-								</div>
-	
-							<div><md-button ng-disabled="myForm.isin.$invalid || myForm.personName.$invalid" class="md-primary md-raised" ng-click="add(); toggleAddNew()" >Add</md-button></div>
-					
-			</form>
-		</div>
+							<label for="personName">Name</label><br>
+								<md-input-container >
+									<label>Full name</label> <input required="" ng-model="personName" name="personName" />
+									<div ng-messages="myForm.personName.$error">
+										<div ng-message="required">This is required.</div>
+									</div>
+								</md-input-container>
+<br>
+								<label for="isin">Isin <span><font size="3" color="red">{{genderNumber}}{{birthdate}}{{uniqueNumber}}</font></span></label>
+									<div layout-gt-xs="row" layout-align="center start">
+										<md-input-container style="margin-right: 5px; width: 100px;">
+											<label>Gender</label> 
+												<md-select ng-model="gender"> 
+													<md-option name="genderSelection" ng-repeat="gender in genders" value="{{gender.abbrev}}" ng-click="changeToNumber(gender)">{{gender.abbrev}} </md-option> 
+												 </md-select> 
+										</md-input-container>
+				
+											<div flex-gt-xs="">
+												<md-input-container style="margin-right: 5px;">
+														<md-datepicker ng-change="doDateTransformation()" name="date" ng-model="myDate" md-current-view="year" md-placeholder="Birth date" md-min-date="minDate" md-max-date="maxDate" required=""></md-datepicker>
+												</md-input-container>
+											</div>
+									
+										<md-input-container style=" width: 140px;">
+											<label>Unique nr.</label> 
+												<input name="uniqueNumber" ng-model="uniqueNumber" placeholder="123456" required="" ng-pattern="/^[0-9]{6}$/" md-maxlength="6" > 
+										</md-input-container>
+									</div>
+							</div>	
+					<div><md-button ng-disabled="myForm.date.$invalid || myForm.genderSelection.$invalid || myForm.uniqueNumber.$invalid || myForm.personName.$invalid" class="md-primary md-raised" ng-click="add(); toggleAddNew()" >Add <span class="glyphicon glyphicon-ok-sign"></span></md-button></div>
+				</form>
 	</div>
 
 		<div ng-if="status" id="status">
@@ -57,25 +74,22 @@
 
 	<div ng-controller="ModalDemoCtrl " class="modal-demo" ng-show="personsTable">
 		
-			<div>
-					<h4>Person List</h4> 
-					<md-button class="md-primary md-raised" ng-disabled="isEnabled()" ng-click="showDeleteConfirm($event)">Delete</md-button>
-					<md-button class="md-primary md-raised" ng-click="toggleHideList()">Hide List</md-button>
-					<input class="form-control input-sm" style="width: 25%; margin: 0 auto" placeholder="Search person..." ng-model="searchText">
+			<div class="person-handle">
+				<button class="btn btn-danger" ng-disabled="isEnabled()" ng-click="showDeleteConfirm($event)">Delete <span class="glyphicon glyphicon-remove"></span></button>
+					<md-input-container >
+						<label>Search person...</label> <input ng-model="searchText" />
+					</md-input-container>
 			</div>
-					<small style="float: right">*double-click on <u>person name</u> to edit field</small> 
-					<br>
-					<small style="float: right">*double-click on desired row to see performance details</small> 
-					<br> 
-					<small style="float: right">*click on <u>check-box</u> to delete desired row/s</small> 
 <p></p>
-		<table name="myTable" ng-model="myTable" class="table table-hover" >
-				<thead>
-					<tr class="mainTableRow">
+	
+		<table name="myTable" ng-model="myTable" class="table table-hover" ng-hide="myTable">
+
+				<thead uib-tooltip="*double-click on row to view performances"
+		           	   tooltip-placement="top-right"
+		               tooltip-trigger="'mouseenter'">
+					<tr class="mainTableRow" >
 						<td>Select All <br><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></td>
-						
 						<td><b>Isin</b></td>
-						
 						<td>
 							<a href="#" ng-click="sortType = 'personName'; sortReverse = !sortReverse">
 							<b>Name</b>
@@ -83,27 +97,29 @@
            					<span ng-show="sortType == 'personName' && sortReverse" class="fa fa-caret-up"></span>
 							</a>
 						</td>
-						
 						<td>
 							<a href="#" ng-click="sortType = 'perfTotal'; sortReverse = !sortReverse">
 							<b>Total</b>
 							<span ng-show="sortType == 'perfTotal' && !sortReverse" class="fa fa-caret-down"></span> 
 							<span ng-show="sortType == 'perfTotal' && sortReverse" class="fa fa-caret-up"></span>
-							</a>
+							</a><br>
+							<a href="#">
+         					 <span class="glyphicon glyphicon-refresh" ng-click="getAll()"></span>
+       						</a>
 						</td>
 					</tr>
 				</thead>
-				
 			<tbody>
 				<tr ng-repeat="person in persons | orderBy: sortType:sortReverse | filter:searchText | unique:'isin'" ng-dblclick="open(person, $event)">
-					<td><input type="checkbox" ng-model="person.checked" /></td>
-					
+					<td><input type="checkbox" ng-model="person.checked" data-is-name="true"/></td>
 					<td><i>{{person.isin}}</td>
-					
-					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)"><b data-is-name="true">{{person.personName}}</b></span>
+					<td><span ng-hide="person.editing" ng-dblclick="editItem(person)">
+					<b data-is-name="true"
+					   uib-tooltip="*double-click to edit"
+		           	   tooltip-placement="top"
+		               tooltip-trigger="'mouseenter'">{{person.personName}}</b></span>
 						<input ng-show="person.editing" ng-model="person.personName" ng-blur="doneEditing(person)" autofocus size="6" />
 					</td>
-					
 					<td ng-model="person.perfTotal">{{person.perfTotal | number : 2}}</td>
 				</tr>
 			</tbody>
@@ -111,9 +127,9 @@
 	</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<!-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>  -->
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>

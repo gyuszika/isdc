@@ -2,6 +2,51 @@ var app = angular.module("myApp", ['ngRoute','ngMaterial', 'ngMessages', 'angula
 
 var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 
+	//min and max dates for date picker
+	 var myDate = new Date(99,1,1);
+
+	  $scope.minDate = new Date(
+	    myDate.getFullYear()-50,
+	    myDate.getMonth(),
+	    myDate.getDate()
+	  );
+
+	  $scope.maxDate = new Date(
+		myDate.getFullYear(),
+		myDate.getMonth(),
+	   	myDate.getDate()
+	  );
+	
+	  //transform and parse date to isin model to validate form
+	  $scope.myDate;
+	 
+	  $scope.$watch("myDate", function(newValue, oldValue) {
+		  if(newValue) {
+			   var year= newValue.getFullYear().toString().substr(2,4);
+			   var month = newValue.getMonth()+1;
+			   var day = newValue.getDate();
+			   
+			  
+			   var newDay;
+			   if(day < 10){
+				 newDay="0"+day.toString();  
+				   }else{
+					   newDay=day.toString();
+				   };
+			   
+			   var newMonth;
+			   if(month < 10){
+				   newMonth="0"+month.toString();  
+				   }else{
+					   newMonth=month.toString();
+				   };
+			
+				var isinYear = year+newMonth+newDay;
+			   
+			   $scope.birthdate = isinYear;
+		  }
+		});
+	
 	$scope.timeFormat = 'MM/d/yyyy h:mm:ss a';
 	
 	var initial = {text: 'initial value'};
@@ -35,18 +80,34 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 		$http.get("/TrainingApp/getAllPerson").then(onUserComplete, onError);
 	};
 	
+	$scope.genders = ('Male Female').split(' ').map(function(gender) {
+        return {abbrev: gender};
+    
+	});
+	
+	//changes Gender to a number value so that ISIN will store only digits
+	$scope.changeToNumber = function(gender){
+//       var gender = $scope.gender.abbrev;
+		if(gender.abbrev === "Male"){
+        	$scope.genderNumber = 1;
+        }else{
+        $scope.genderNumber = 2;
+        }
+	};
+	
 	//function for adding new person
 	$scope.add = function() {
+		var completeIsin = $scope.genderNumber.toString() + $scope.birthdate + $scope.uniqueNumber;
 		
 		//created variable to be parsed to controller as a string
 		var person = $.param({
-			isin : $scope.isin,
+			isin : completeIsin,
 			personName : $scope.personName
 		});
 		
 		//current variable creates the Object
 		var personToAdd = {
-			isin : $scope.isin,
+			isin : completeIsin,
 			personName : $scope.personName
 		};
 		
@@ -57,37 +118,30 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
         };
 		$http.post("/TrainingApp/add", person, config);
 		
-		//on click empties inputs from form
-		 $scope.isin = null;
-		 $scope.personName = null;
 		
-		 $scope.myForm.$setUntouched();
+			//on click empties inputs from form
+			$scope.genderNumber = null;
+			$scope.birthdate = null;
+			$scope.uniqueNumber = null;
+			$scope.gender = null;
+			$scope.uniqueNumber = null;
+			$scope.myDate=null;
+			$scope.personName = null;
+			$scope.myForm.$setUntouched();
+			
+			$scope.persons.push(personToAdd);
 		
-		 $scope.persons.push(personToAdd);
-		
-		//on click (Add) button it hides input form
-		$scope.addNewPerson = false;
-        $scope.toggleAddNew = function() {
-        $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
-        
-        };
+			//on click (Add) button it hides input form
+			$scope.addNewPerson = false;
+	       
+			$scope.toggleAddNew = function() {
+				$scope.addNewPerson = $scope.addNewPerson === false ? true: false;
+	        };
         
 	};
 	
-		  //select/unselect all rows from table
-		  $scope.checkAll = function () {
-		        if ($scope.selectedAll) {
-		            $scope.selectedAll = true;
-		        } else {
-		            $scope.selectedAll = false;
-		        }
-		        angular.forEach($scope.persons, function (person) {
-		            person.checked = $scope.selectedAll;
-		        });
-
-		    };
-		    
-		    //toggle between show/hide input form for adding a new person
+	
+	    	//toggle between show/hide input form for adding a new person
 		    $scope.addNewPerson = true;
 	        $scope.toggleAddNew = function() {
 	        $scope.addNewPerson = $scope.addNewPerson === false ? true: false;
@@ -95,6 +149,7 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 	     
 	        //toggle between show/hide table
 	        $scope.personsTable = true;
+	       
 	        $scope.toggleHideList = function () {
 	        	$scope.personsTable = !$scope.personsTable;
 	        };
@@ -140,34 +195,35 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
       		});
       			$scope.persons = selectedObject;
       		};
-      		
-			//Edit person name on double-click
-			$scope.editItem = function (person) {
-	        	  person.editing = true;
-	          }
+      	   
 
-	          $scope.doneEditing = function (person) {
-	        	  person.editing = false;
-	        	 
-	        	  var personToEdit = $.param({
-	      			isin : person.isin,
-	      			personName : person.personName,
-	      		});
-	      		
-	      		var config = {
-	                      headers : {
-	                          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-	                      }
-	              };
-	      		$http.post("/TrainingApp/edit", personToEdit, config);
-	
-	          };
+	// Edit person name on double-click
+	$scope.editItem = function(person) {
+		person.editing = true;
+	}
+
+	$scope.doneEditing = function(person) {
+		person.editing = false;
+
+		var personToEdit = $.param({
+			isin : person.isin,
+			personName : person.personName,
+		});
+
+		var config = {
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded;charset=utf-8;'
+			}
+		};
+		$http.post("/TrainingApp/edit", personToEdit, config);
+
+	};
 	          
 };
 
 app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScroll", getAllPersonCtrl])
 
-//following directive shows live date/time on front page
+// following directive shows live date/time on front page
 .directive('myCurrentTime', ['$interval', 'dateFilter', function($interval, dateFilter) {
 
     function link(scope, element, attrs) {
@@ -218,19 +274,25 @@ app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScro
         };
     })
 
-.config(function($anchorScrollProvider) {
+.config(function($anchorScrollProvider, $mdAriaProvider) {
   	
     $anchorScrollProvider.disableAutoScrolling();
+    $mdAriaProvider.disableWarnings();
   })
  
   //Following controller is a modal for person detailed information regarding it's performance
-.controller('ModalDemoCtrl', function ($scope, $uibModal, $log, $document) {
+.controller('ModalDemoCtrl', function ($scope, $uibModal, $http, $log, $document) {
   
 	 $scope.getAll();
 	 $scope.data = $scope.persons;
 	 $scope.animationsEnabled = true;
 
-	 $scope.open = function(person, size) {
+	 $scope.open = function(person, $event) {
+		 
+		 if($($event.target).data('isName')) {
+			 return;
+		 }
+		 
 		var modalInstance = $uibModal.open({
 			animation : $scope.animationsEnabled,
 			ariaLabelledBy : 'modal-title',
@@ -245,52 +307,183 @@ app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScro
 			}
 		});
 		
-		
 	};
 
   $scope.toggleAnimation = function () {
     $scope.animationsEnabled = !$scope.animationsEnabled;
   };
   
+//select/unselect all rows from table
+  $scope.checkAll = function () {
+        if ($scope.selectedAll) {
+            $scope.selectedAll = true;
+        } else {
+            $scope.selectedAll = false;
+        }
+        angular.forEach($scope.persons, function (person) {
+        	person.checked = $scope.selectedAll;
+        });
+
+    };
+  
 })
 
 .controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, $filter, data) {
   $scope.person = data;
-
+ 
+  $scope.panel = {};
+  
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
   
-  $scope.showChart = function(){
- 	  $scope.personChart = !$scope.personChart;
- 	  
- 	  var personToCheck=$scope.person.performance;
- 	  var performanceYears = [];
- 	  var performances = [];
- 	  
- 	 personToCheck= $filter('orderBy')(personToCheck, 'performanceYear');
- 	  
-       angular.forEach(personToCheck, function(value, key){
-     	  performanceYears.push(value.performanceYear+'');
-     	  performances.push(value.performance);
-     	  
-       });
-       
-       Highcharts.chart('performanceChart', {
-           title: {
-             text: 'Performance Data'
-           },
-
-           xAxis: {
-             categories: performanceYears
-           },
-
-           series: [{
-             data: performances
-           }]
-         });
-   };
-});
-
+  //defines person's gender based on 1st digit from ISIN
+  var genderNumber = (data.isin.toString().charAt(0));
+  if (genderNumber == 1){
+		$scope.gender = "Male";
+		$scope.image = "/TrainingApp/resources1/images/male.png";
+	}else{
+		$scope.gender = "Female";
+		$scope.image = '/TrainingApp/resources1/images/female.png';
+	};
+	
+	//defines persons's birthdate based on substr. of isin
+	 var personBirthYear = (data.isin.toString().substring(1,3));
+	 var personBirthMonth = (data.isin.toString().substring(3,5));
+	 var personBirthDay = (data.isin.toString().substring(5,7));
+	 
+	 $scope.birthDate = personBirthMonth +"."+ personBirthDay +"."+ personBirthYear;
   
+  //Following function changes modal table to chart view
+  $scope.showPanel = function(x) {
+	  
+	  if($scope.panel[x] !== undefined) {
+		  $scope.panel[x] = !$scope.panel[x];
+		  return;
+	  }
+	  
+ 	 $scope.panel[x] = true;
+ 	 
+	 if(x =='pie') {
+    	instantiatePie();
+	} else if(x =='chart'){
+		instantiateChart();
+	}
+	 
+  };
   
+  function instantiateChart() {
+	  var chartData = {};
+	 	 chartData.performanceYears = [];
+	 	 chartData.performances= [];
+	 	 chartData.personToCheck = $filter('orderBy')($scope.person.performance, 'performanceYear');
+
+		  angular.forEach(chartData.personToCheck, function(value, key){
+		 	 chartData.performanceYears.push(value.performanceYear+'');
+		 	 chartData.performances.push(value.performance); 
+		  });
+  
+     	Highcharts.chart('performance-chart', {
+            title: {
+              text: 'Performance Chart'
+            },
+
+            xAxis: {
+              categories: chartData.performanceYears
+            },
+
+            series: [{
+              data: chartData.performances
+            }]
+          });
+  }
+  
+//  $scope.$on('$destroy', function() {
+//	  angular.forEach(Highcharts.charts, function(chart) {
+//		  if(chart) {
+//			  chart.destroy();
+//		  }
+//	  })
+//
+//  });
+  
+  function instantiatePie() {
+	  
+	  var pieData = {};
+	 	pieData.bestPerformances = [];
+	 	pieData.worstPerformances = [];
+	 	pieData.averagePerformances = [];
+	 	pieData.personToCheck = $filter('orderBy')($scope.person.performance, 'performanceYear');
+	 	
+	 	angular.forEach(pieData.personToCheck, function(value, key){
+	 		if(value.performance > 600){
+		  		 pieData.bestPerformances.push(value.performanceYear);
+		  	 }else if(value.performance < 600 && value.performance > 200){
+		  		 pieData.averagePerformances.push(value.performanceYear);
+		  	 }else{
+		  		 pieData.worstPerformances.push(value.performanceYear);
+		  	 }
+  	 
+   });
+	 	
+	 	pieData.average = (pieData.averagePerformances.length/17)*100;
+	 	pieData.best = (pieData.bestPerformances.length/17)*100;
+	 	pieData.worst = (pieData.worstPerformances.length/17)*100;
+	    // Build the chart
+	    Highcharts.chart('performance-pie', {
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },
+	        title: {
+	            text: 'Performance Pie'
+	        },
+	        tooltip: {
+	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },
+	        series: [{
+	            name: 'Rate',
+	            data: [
+	                { name: 'Average', y: pieData.average },
+	                {
+	                    name: 'Bad',  y: pieData.worst,
+	                    sliced: true,
+	                    selected: true
+	                },
+	                { name: 'Good', y: pieData.best }
+	            ]
+	        }]
+	    });
+	    
+//	     // Radialize the colors
+//	    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+//	        return {
+//	            radialGradient: {
+//	                cx: 0.5,
+//	                cy: 0.3,
+//	                r: 0.7
+//	            },
+//	            stops: [
+//	                [0, color],
+//	                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+//	            ]
+//	        };
+//	    });
+	 }
+  });

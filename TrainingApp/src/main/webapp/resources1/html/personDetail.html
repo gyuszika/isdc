@@ -1,55 +1,69 @@
-<div type="text/ng-template">
-	<div class="modal-header">
-		<button style="float:right" class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
-		<h3 class="modal-title" id="modal-title">Person Detail</h3>
-	</div>
-	<div class="modal-body" id="modal-body">
-		<div class="form-group">
-			<h4>
-				<b><i><u>{{person.personName}}</u></i></b>
-			</h4>
-			<b style="float: centre">{{person.isin}}</b> <br>
-			
-		   <a href="" style="float:right" ng-click="showChart()" ng-if="!personChart">View Chart</a>
-           <a href="" style="float:right" ng-click="showChart()" ng-if="personChart">View Table</a>
-	
-			<div id="performanceChart" ng-show="personChart">Placeholder for chart</div>
-			
-			<table ng-hide="personChart" class="table table-condensed">
-				<thead>
-					<tr>
-						<td><a href="#"
-							ng-click="sortType = 'performanceYear'; sortReverse = !sortReverse">
-								<b>Year</b> <span
-								ng-show="sortType == 'performanceYear' && !sortReverse"
-								class="fa fa-caret-down"></span> <span
-								ng-show="sortType == 'performanceYear' && sortReverse"
-								class="fa fa-caret-up"></span>
-						</a></td>
-
-						<td><a href="#"
-							ng-click="sortType = 'performance'; sortReverse = !sortReverse">
-								<b>Performance</b> <span
-								ng-show="sortType == 'performance' && !sortReverse"
-								class="fa fa-caret-down"></span> <span
-								ng-show="sortType == 'performance' && sortReverse"
-								class="fa fa-caret-up"></span>
-						</a></td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr
-						ng-repeat="x in person.performance | orderBy: sortType:sortReverse">
-						<td>{{x.performanceYear}}</td>
-						<td>{{x.performance}}</td>
-					</tr>
-				</tbody>
-			</table>
-			
-			<label>Total Performance:</label>
-	      {{person.perfTotal | number : 2}}
-		
+<div type="text/ng-template" class="modalDiv">
+		<div class="modal-header">
+				<div class="non-printable" style="float: right">
+					
+<!-- 					<button class="btn btn-info" ng-click="showChart()" ng-if="!personChart"> <span class="glyphicon glyphicon-eye-open"></span> View Chart</button>  -->
+<!-- 					<button class="btn btn-info" ng-click="showChart()" ng-if="personChart"> <span class="glyphicon glyphicon-eye-open"></span> View Table</button> -->
+<!-- 					<button class="btn btn-info" ng-click="showPie()"   ng-if="!personPie"> <span class="glyphicon glyphicon-eye-open"></span> View Pie</button> -->
+					
+					<button class="btn btn-info" ng-click="showPanel('chart')"> <span class="glyphicon glyphicon-eye-open"></span> View Chart</button> 
+					<button class="btn btn-info" ng-click="showPanel('pie')"> <span class="glyphicon glyphicon-eye-open"></span> View Pie</button>
+					
+					<a href="javascript:window.print()" class="btn btn-success"> <span class="glyphicon glyphicon-print"></span> Print</a>
+					<button class="btn btn-danger" ng-click="cancel()">Close &times;</button>
+				</div>
+			<div>
+				<div class="person-info">
+					<img ng-src ="{{image}}" title="{{person.personName}}"/>
+				</div>
+				<div class="person-info">
+					<h3 class="modal-title" id="modal-title"><i><u>{{person.personName}}</u></i></h3>
+					Isin - <mark><b>{{person.isin}}</b></mark><br>
+					Birthdate - <b>{{birthDate}}</b><br>
+					Gender - <b>{{gender}}</b>
+				</div>
+			</div>
 		</div>
-		<div class="modal-footer"></div>
-	</div>
+		
+		<div class="modal-body" id="modal-body">
+
+		<div id="performance-chart" ng-show="panel.chart" ></div>
+		<div id="performance-pie" ng-show="panel.pie" ></div>
+		
+		<u><h4 align="center" ng-hide="panel.chart || panel.pie">Performance history</h4></u>
+			<div class="non-printable" ng-class="progress" id="progressDiv" ng-hide="panel.chart">
+				<div class="progress-bar progress-bar-danger" role="progressbar" style="width: 30%">Performance below 200$</div>
+				<div class="progress-bar progress-bar-info" role="progressbar" style="width: 40%">Performance average</div>
+				<div class="progress-bar progress-bar-success" role="progressbar" style="width: 30%">Performance above 600$</div>
+			</div>
+<br>
+<br>
+		<table class="table table-bordered table-hover" ng-hide="panel.chart || panel.pie">
+			
+			<col width="210">
+	 		<col width="210">
+					<thead> 
+						<tr>
+							<th><a href="#" ng-click="sortType = 'performanceYear'; sortReverse = !sortReverse">
+									<b>Year</b> <span ng-show="sortType == 'performanceYear' && !sortReverse" class="fa fa-caret-down"></span> 
+									<span ng-show="sortType == 'performanceYear' && sortReverse" class="fa fa-caret-up"></span>
+							</a></th>
+	
+							<th><a href="#" ng-click="sortType = 'performance'; sortReverse = !sortReverse">
+									<b>Performance</b> <span ng-show="sortType == 'performance' && !sortReverse" class="fa fa-caret-down"></span> 
+									<span ng-show="sortType == 'performance' && sortReverse" class="fa fa-caret-up"></span></a>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="x in person.performance | orderBy: sortType:sortReverse" ng-class="x.performance >= 600 ? 'custom-class' : (x.performance < 200 ? 'warning-color' : 'default-color') ">
+							<td>{{x.performanceYear}}</td>
+							<td>{{x.performance}}</td>
+						</tr>
+					</tbody>
+				</table>
+	
+				<label id="modalLabel">Total Performance: <span><u>{{person.perfTotal | number : 2}}</u></span> </label>
+			<div class="modal-footer"></div>
+		</div>
 </div>
