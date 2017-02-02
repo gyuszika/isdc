@@ -17,6 +17,7 @@ var getAllPersonCtrl = function($scope, $http, $mdDialog) {
 	   	myDate.getDate()
 	  );
 	
+	  
 	  //transform and parse date to isin model to validate form
 	  $scope.myDate;
 	 
@@ -280,7 +281,7 @@ app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScro
     $mdAriaProvider.disableWarnings();
   })
  
-  //Following controller is a modal for person detailed information regarding it's performance
+//Following controller is a modal caller to view detailed information of every person
 .controller('ModalDemoCtrl', function ($scope, $uibModal, $http, $log, $document) {
   
 	 $scope.getAll();
@@ -328,6 +329,7 @@ app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScro
   
 })
 
+//Following controller represents the modal controller
 .controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, $filter, data) {
   $scope.person = data;
  
@@ -372,6 +374,7 @@ app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScro
 	 
   };
   
+  //Function is called when 'Chart' is selected
   function instantiateChart() {
 	  var chartData = {};
 	 	 chartData.performanceYears = [];
@@ -398,7 +401,7 @@ app.controller("getAllPersonCtrl", ["$scope", "$http", "$mdDialog", "$anchorScro
           });
   }
   
-
+  //Function is called when 'Pie Chart' is selected
   function instantiatePie() {
 	  
 	  var pieData = {};
